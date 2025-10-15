@@ -1,0 +1,102 @@
+{% extends "Royalemp_commerce/main.html" %}
+{% load static %}
+    {% block content %}
+        <div class="md:px-12 px-6 mt-14">
+            <h3 class="md:text-2xl text-xl ">cart</h3>
+        </div>
+        <div class="border shadow-md py-4 md:px-8 px-2 bg-white mx-4 xl:mx-80 lg:mx-48 md:mx-24 sm:mx-8 ">
+            <div class="-mt-4 py-4">
+                <a href="{% url 'store' %}">
+                    <span class="border-2 border-gray-400 p-1 shadow cursor-pointer hover:shadow-md md:text-sm text-xs rounded ">
+                        << countinue shopping
+                    </span>
+                </a>
+            </div><hr>
+            <div class="flex justify-between items-center ">
+                <div class="flex items-center md:gap-48 gap-12 justify-between py-3 text-xs md:text-sm font-bold ">
+                    <span>
+                        items: {{order.get_cart_items}}
+                    </span>
+                    <span>
+                        Total: #{{order.get_cart_total|floatformat:2}}
+                    </span>
+                </div>
+                <div class="">
+                    {% if order.get_cart_items == 0 %}
+                        No order
+                    {% else %}
+                        <a href="{% url 'checkout' %}">
+                            <button class="bg-green-500 p-1 shadow-sm rounded text-xs md:text-sm text-gray-50 hover:bg-green-600 hover:shadow-md ">
+                                checkout
+                            </button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="border shadow-md mt-16 bg-white overflow-x-auto mx-4 xl:mx-80 lg:mx-48 md:mx-24 sm:mx-8  ">
+        <!-- <div class="border shadow-md md:mx-60 md:px-8 mx-6 px-2 mt-16 bg-white overflow-x-auto  "> -->
+            <div class=" ">
+                <div class="block px-2  ">
+                    {% for cart_item in items %}
+                        <div class="flex items-center md:gap-12 gap-2 border-b-4 justify-between mx-4 ">
+                            <div class="py-2 ">
+                                <div class="text-xs md:text-sm mt-4 flex lg:hidden -mx-2 ">
+                                    {{ cart_item.product.name }}
+                                </div>
+                                <div class="py-1">
+                                    <img src="{{cart_item.product.imageURL}}" alt="" class="object-contain md:h-36 h-24  ">
+                                    <!-- <img src="{{cart_item.product.imageURL}}" alt="" class="md:h-48 h-24  "> -->
+                                    <!-- <img src="{% static 'img/placeholder.png' %}" alt=""> -->
+                                </div>
+                                <button class="update-cart bg-red-500 hover:bg-red-600 shadow-lg text-gray-50 text-xs md:text-xs px-1 rounded  bottom-12 mx-16" data-product="{{cart_item.product.id}}" data-action="clear_out" >
+                                    delete
+                                </button>
+                            </div>
+                            <div class="sm:flex items-center md:gap-12 gap-3  ">    
+                                <div class=" mt-4 lg:flex hidden text-xs md:text-sm ">
+                                    {{cart_item.product.name}}
+                                </div>
+                                <div class="block md:flex gap-4 text-xs md:text-sm ">
+                                    <div class="">
+                                        price: #{{ cart_item.product.price }}
+                                    </div>
+                                    <div class="  ">
+                                        total: #&nbsp;{{cart_item.get_total|floatformat:2 }}
+                                    </div>
+                                </div>
+                                <div class="border-l-2 px-2 items-center flex mx- text-xs md:text-sm ">
+                                    <span class="">
+                                        {{cart_item.quantity}}
+                                    </span>
+                                    <!--  -->
+                                    <div class="inline-block mx-2 ">
+                                        <div class=" ">
+                                            <button data-product="{{cart_item.product.id}}" class="update-cart " data-action="add">
+                                                <img src="{% static 'img/sort_up.png' %}" alt="" class="hover:shadow-md object-contain h-4 md:h-6 ">
+                                            </button>
+                                        </div>
+                                        <div class=" ">
+                                            <button data-product="{{cart_item.product.id}}" class="update-cart " data-action="remove">
+                                                <img src="{% static 'img/sort_down.png' %}" alt="" class="hover:shadow-md object-contain h-4 md:h-6 ">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                    {% endfor %}
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+    {% endblock content %}
+
+<!--  -->
+
+<!--  -->
+
+<!--  -->
+
+<!--  -->

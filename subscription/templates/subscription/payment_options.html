@@ -1,0 +1,101 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<body class="bg-gray-100">
+    <div class="px-12">
+        <div class="py-2 mb-2">
+            <p>Plan selected: {{ subscription.plan.name }} - ${{ subscription.plan.price }}</p>
+            <div class="text-lg font-bold mt-6">Select a Payment Method</div>
+        </div>
+
+        <form method="POST" action="{% url 'subscription:select_payment' %}">
+            {% csrf_token %}
+            <input type="hidden" name="subscription_id" value="{{ subscription.id }}">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:px-12 md:px-18 gap-4 mt-12">
+                {% for option in payment_options %}
+                    {% if option.name == "bank_transfer" %}
+                        <div class="px-2 md:px-4 py-4 border rounded-md bg-gray-50 cursor-pointer hover:shadow">
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="payment_option_id" 
+                                    value="{{ option.id }}" 
+                                    id="payment_{{ option.name }}" 
+                                    required 
+                                    onclick="updateButton('{{ option.name }}')">
+                                <div class="px-6">
+                                    <i class="fa-solid fa-building-columns  text-3xl "></i>
+                                    <strong>{{ option.name }}</strong>
+                                </div>
+                            </div>
+                            <div class="mt-2 py-2 px-6">
+                                {{ option.description }}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class=" py-4 border rounded-md bg-gray-50 cursor-pointer hover:shadow">
+                            <div class="">
+                                <div class="text-xs text-right  ">
+                                    <span class="text-white bg-red-400 px-1 shadow rounded-l-full py-1 ">
+                                        coming soon
+                                    </span>
+                                </div>
+                                <div class="px-2 md:px-4 py-4 ">
+                                    <input 
+                                        type="radio" 
+                                        name="payment_option_id" 
+                                        value="{{ option.id }}" 
+                                        id="payment_{{ option.name }}" 
+                                        required 
+                                        onclick="updateButton('{{ option.name }}')">
+                                        <div class="px-6">
+                                            <i class="fa-solid fa-building-columns"></i>
+                                            <strong>{{ option.name }}</strong>
+                                        </div>
+                                        <div class="mt-2 py-2">
+                                            {{ option.description }}
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="flex justify-end px-4 mb-28">
+                <!-- Button for "bank_transfer" -->
+                <button 
+                    id="bank_transfer_button" 
+                    type="submit" 
+                    name="bank_transfer" 
+                    class="bg-gray-200 px-2 py-1 rounded-md mt-6 shadow-md hover:bg-blue-300 hidden">
+                    I have made Payment
+                </button>
+        
+                <!-- Default button for other payment options -->
+                <button 
+                    id="default_button" 
+                    type="submit" 
+                    class="bg-gray-200 px-2 py-1 rounded-md mt-6 shadow-md hover:bg-green-300 hidden">
+                    Proceed with Payment
+                </button>
+            </div>
+        </form>
+        
+    </div>
+
+    <script>
+        function updateButton(paymentOption) {
+            const bankTransferButton = document.getElementById('bank_transfer_button');
+            const defaultButton = document.getElementById('default_button');
+        
+            if (paymentOption === 'bank_transfer') {
+                bankTransferButton.classList.remove('hidden');
+                defaultButton.classList.add('hidden');
+            } else {
+                bankTransferButton.classList.add('hidden');
+                defaultButton.classList.remove('hidden');
+            }
+        }
+        
+    </script>
+</body>

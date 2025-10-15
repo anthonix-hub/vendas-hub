@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-100 dark:bg-gray-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <script src="{% static 'js/htmx.js' %}"></script>
+    <script src="{% static 'js/tailwind.config.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script>
+        // Apply theme immediately to prevent FOUC
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body>
+    <div class="flex h-screen overflow-  ">
+        {% include 'tenant/dashboard/dashboard_sidebar.html' %}
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20"></div>
+        <div class="flex-1 flex flex-col overflow-">
+            {% include 'tenant/dashboard/dashboard_header.html' %}
+            <main class="flex-1 p-2 lg:ml-48 bg-gray-50 dark:bg-gray-800">
+                {% block content %}
+                <!-- Page Content Here -->
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+    <script>
+        // Sidebar toggle
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const openSidebar = document.getElementById('openSidebar');
+    
+        openSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+
+        // Dark Mode toggle
+        const toggleDarkMode = document.getElementById('toggleDarkMode');
+        toggleDarkMode.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+    </script>
+</body>
+</html>

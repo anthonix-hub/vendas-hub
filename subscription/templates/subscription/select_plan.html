@@ -1,0 +1,121 @@
+{% extends "tenant/main.html" %}
+{% block content %}
+
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<div class="container mx-auto p-4 mt-6">
+    {% comment %} {% if messages %}
+        <div id="popup-messages" style="display: none;">
+            {% for message in messages %}
+                <div class="popup-message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %} {% endcomment %}
+    {% if messages %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let showMessage = true;  // Prevent duplicate alerts on refresh
+                if (showMessage) {
+                    {% for message in messages %}
+                        Swal.fire({
+                            title: '{% if message.tags == "success" %}Success{% elif message.tags == "error" %}Error{% elif message.tags == "info" %}Info{% elif message.tags == "warning" %}Warning{% endif %}',
+                            text: "{{ message|escapejs }}",
+                            icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% elif message.tags == "info" %}info{% elif message.tags == "warning" %}warning{% endif %}',
+                            confirmButtonText: 'OK',
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    {% endfor %}
+                }
+            });
+        </script>
+    {% endif %}
+
+
+
+
+    <h1 class="text-2xl font-semibold mb-6">Choose Your Subscription Plan</h1>
+    <form method="POST" id="plan-form" class="mt-24">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mx-12">
+            {% for plan in plans %}
+            <div class="border p-4 rounded shadow-md bg-gray-50 text-center cursor-pointer ">
+                <h2 class="text-lg font-bold text-center mb-6">{{ plan.get_name_display }}</h2>
+                <div class="flex justify-center gap-1 ">
+                    <p class="text-md ">
+                        #
+                    </p>
+                    <p class="font-semibold text-4xl">{{ plan.price }}</p>
+                </div>
+                <p class="text-gray-600 my-6">{{ plan.description }}</p>
+                <p class="text-sm text-gray-500 my-6">Duration: {{ plan.duration }} days</p>
+                <hr class="shadow">
+                {% if plan.get_name_display == 'Free Plan'  %}
+                    <button type="button"  class="bg-blue-500 text-white px-12 py-2 mt-4 rounded hover:bg-blue-400" onclick="openPlanDetails({{ plan.id }}, '{{ plan.get_name_display }}', {{ plan.price }}, '{{ plan.description }}', {{ plan.duration }})">
+                        Get free trial
+                    </button>
+                {% else %}
+                    <button type="button"  class="bg-blue-500 text-white px-12 py-2 mt-4 rounded hover:bg-blue-400" onclick="openPlanDetails({{ plan.id }}, '{{ plan.get_name_display }}', {{ plan.price }}, '{{ plan.description }}', {{ plan.duration }})">
+                        Get Plan
+                    </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div> 
+        <input type="hidden" name="plan_id" id="selected-plan-id">
+    </form>
+</div>
+
+<!-- Modal -->
+<div id="plan-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-50">
+    <div class="bg-white w-full max-w-md p-6 rounded shadow-lg">
+        <h2 class="text-xl font-bold mb-4" id="modal-plan-name"></h2>
+        <p class="text-lg mb-4" id="modal-plan-price"></p>
+        <p class="text-gray-600 mb-4" id="modal-plan-description"></p>
+        <p class="text-sm text-gray-500 mb-4" id="modal-plan-duration"></p>
+        <div class="flex justify-between">
+            <button 
+                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400"
+                onclick="closeModal()">
+                Back
+            </button>
+            <button 
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400"
+                onclick="confirmPlan()">
+                proceed
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openPlanDetails(planId, planName, planPrice, planDescription, planDuration) {
+        // Populate modal with plan details
+        document.getElementById('modal-plan-name').textContent = planName;
+        document.getElementById('modal-plan-price').textContent = `$${planPrice}`;
+        document.getElementById('modal-plan-description').textContent = planDescription;
+        document.getElementById('modal-plan-duration').textContent = `Duration: ${planDuration} days`;
+        document.getElementById('selected-plan-id').value = planId;
+
+        // Show modal
+        document.getElementById('plan-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        // Hide modal
+        document.getElementById('plan-modal').classList.add('hidden');
+    }
+
+    function confirmPlan() {
+        // Submit the form
+        document.getElementById('plan-form').submit();
+    }
+
+    
+</script>
+{% endblock %}

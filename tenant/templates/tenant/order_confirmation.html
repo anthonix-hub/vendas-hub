@@ -1,0 +1,78 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<div class="px-24">
+    {% if order.payment_made %}
+        <div class="md:px-4 md:mx-6 mx-4">
+            <h3 class="md:text-2xl text-xl mt-12 ">
+                {% comment %} <i class="fa-solid fa-cart-shopping"></i> {% endcomment %}
+                Order Confirmation
+            </h3>
+            <div class="bg-white p-4 rounded shadow-md mt-12">
+                <h4 class="text-lg font-semibold mb-4">Thank you for your order!</h4>
+                <p>Your order has been placed successfully.</p>
+                <a href="{% url 'tenant:store' %}" class="mt-4 bg-blue-500 text-xs md:text-md text-white py-1 px-2 rounded inline-block">
+                    <i class="fa-solid fa-shop"></i>
+                    Continue Shopping
+                </a>
+                <a href="{% url 'tenant:order_history' %}" class="mt-4 bg-yellow-500 text-white text-xs py-1 px-2 rounded inline-block">Check order history</a>    
+            </div>
+        </div>
+        <!-- <div class="mt-24">
+            <a href="{% url 'tenant:store' %}" class="mt-4 bg-blue-500 text-xs md:text-md text-white py-2 px-4 rounded inline-block">
+                <i class="fa-solid fa-shop"></i>
+                Continue Shopping
+            </a>
+        </div> -->
+    {% else %}
+        <div class="text-lg font-bold mt-12">Confirming Payment...</div>
+        <div class="mt-6 text-center">
+            Please hold while your transaction is being confirmed.
+        </div>
+        <div class="text- text-center">
+            This will be done in <span id="countdown_timer" class="text-blue-500">30:00</span>. <br class="my-24">Do not refresh the page.
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const countdownDuration = 1800;  // 30 minutes in seconds
+        const countdownElement = document.getElementById('countdown_timer');
+        const transactionReference = "{{ order.payment_reference }}";
+        const storeUrl = "{% url 'tenant:store' %}";
+
+        let timeRemaining = countdownDuration;
+        const timerInterval = setInterval(function () {
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                countdownElement.innerHTML = "Time expired. Please retry.";
+                return;
+            }
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            countdownElement.innerHTML = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timeRemaining--;
+        }, 1000);
+
+        // Polling payment status
+        const pollInterval = setInterval(async function () {
+            try {
+                const response = await fetch(`/subscription/check-payment-status/${order_id}/`);
+                const data = await response.json();
+
+                if (data.is_successful) {
+                    clearInterval(timerInterval);
+                    clearInterval(pollInterval);
+                    alert('Payment confirmed! Redirecting...');
+                    window.location.href = storeUrl;
+                }
+            } catch (error) {
+                console.error('Error polling payment status:', error);
+            }
+        }, 5000);  // Poll every 5 seconds
+    });
+</script>
+
+    

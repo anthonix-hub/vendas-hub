@@ -1,0 +1,249 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+{% load humanize %}  <!-- Load Django humanize for intcomma -->
+{% block content %}
+<div class="md-24">
+    <div class="border md:grid-cols-4 text-sm px-2 bg-gray-100 py-10 gap-6 shadow">
+        <h1 class="text-lg md:text-2xl mb-2 mt-2">Analytics Dashboard</h1>
+        
+        <h2 class="bg-gray-500 py-8 text-white px-8 text-xl md:text-2xl ">
+            Total Revenue: ₦<span id="totalRevenue">{{ total_revenue|intcomma }}</span>
+        </h2>
+        <!-- Date Filter Form -->
+        <div class="mb- mt-4 ">
+            <form id="filterForm" class="flex flex-col sm:flex-row gap-4">
+                <div class="flex gap-2">
+                    <label>
+                        Start Date:
+                        <input type="date" id="startDate" class="border rounded p-1">
+                    </label>
+                    <label>
+                        End Date:
+                        <input type="date" id="endDate" class="border rounded p-1">
+                    </label>
+                </div>
+                <button type="button" id="applyFilters" class="bg-blue-500 text-white px-4 py- shadow rounded">
+                    Apply Filters
+                </button>
+            </form>
+        </div>
+  
+        <div class="grid grid-cols-1 lg:grid-cols-2 py- gap-4 ">
+            <!-- Charts -->
+            <div class="w-full bg-white px-2 py-12 mt-6 rounded shadow ">
+                <div id="monthlyRevenueChart"></div>
+            </div>
+            <div class="w-full bg-white px-2 py-12 mt-6 rounded shadow ">
+                <div id="bestSellingProductsChart"></div>
+            </div>
+        </div>
+        <div class="w-full sm:w-4/6 lg:w-4/6 xl:w-4/6 mx-auto bg-white px-2 py-12 mt-6 rounded shadow ">
+            <div id="heatmapdChart"></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 py- gap-4 ">
+            <div class="w-full bg-white px-2 py-12 mt-6 rounded shadow ">
+                <h3 class="text-xl font-semibold mb-2">Top Buying Customers</h3>
+                <div id="topCustomersChart"></div>
+            </div>
+            
+            <div class="w-full bg-white px-2 py-12 mt-6 rounded shadow ">
+                <h3 class="text-xl font-semibold mb-2">Top Performing Products</h3>
+                <div id="topProductsChart"></div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<script>
+    // Initialize charts with default data
+    const bestSellingProducts = JSON.parse('{{ best_selling_products|safe }}');
+    const monthlyRevenue = JSON.parse('{{ monthly_revenue|safe }}');
+    const heatmapData = JSON.parse('{{ heatmap_data|safe }}');
+
+    // Monthly Revenue Chart
+    const monthlyRevenueChart = new ApexCharts(document.querySelector("#monthlyRevenueChart"), {
+        chart: {
+            type: 'line',
+            height: 350
+        },
+        series: [{
+            name: 'Revenue (₦)',
+            data: monthlyRevenue.map(data => data.revenue)
+        }],
+        xaxis: {
+            categories: monthlyRevenue.map(data => new Date(data.month).toLocaleString('default', { month: 'long' }))
+        }
+    });
+    monthlyRevenueChart.render();
+
+    // Best Selling Products Chart
+    const bestSellingProductsChart = new ApexCharts(document.querySelector("#bestSellingProductsChart"), {
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        series: [{
+            name: 'Units Sold',
+            data: bestSellingProducts.map(data => data.total_sold)
+        }],
+        xaxis: {
+            categories: bestSellingProducts.map(data => data.product__name)
+        }
+    });
+    bestSellingProductsChart.render();
+
+    // Heatmap Chart
+    const heatmapChart = new ApexCharts(document.querySelector("#heatmapChart"), {
+        chart: {
+            type: 'donut',
+            height: 350
+        },
+        series: heatmapData.map(data => data.clicks),
+        labels: heatmapData.map(data => data.product__name)
+    });
+    heatmapChart.render();
+
+    // Top Buying Customers Chart
+    const topCustomers = JSON.parse('{{ top_customers|safe }}');
+    const topCustomersChart = new ApexCharts(document.querySelector("#topCustomersChart"), {
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        series: [
+            {
+                name: 'Total Amount Spent (₦)',
+                data: topCustomers.map(customer => customer.total_spent)
+            },
+            {
+                name: 'Total Items Bought',
+                data: topCustomers.map(customer => customer.total_items)
+            }
+        ],
+        xaxis: {
+            categories: topCustomers.map(customer => customer.order__customer__username)
+        }
+    });
+    topCustomersChart.render();
+
+    // Top Performing Products Chart
+    const topProducts = JSON.parse('{{ top_performing_products|safe }}');
+    const topProductsChart = new ApexCharts(document.querySelector("#topProductsChart"), {
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        series: [
+            {
+                name: 'Total Units Sold',
+                data: topProducts.map(product => product.total_sold)
+            },
+            {
+                name: 'Total Revenue (₦)',
+                data: topProducts.map(product => product.total_revenue)
+            }
+        ],
+        xaxis: {
+            categories: topProducts.map(product => product.product__name)
+        }
+    });
+    topProductsChart.render();
+
+    // Function to update charts dynamically
+    const updateCharts = (data) => {
+        monthlyRevenueChart.updateSeries([{
+            name: 'Revenue (₦)',
+            data: data.monthly_revenue.length ? data.monthly_revenue.map(item => item.revenue) : [0]
+        }]);
+        monthlyRevenueChart.updateOptions({
+            xaxis: {
+                categories: data.monthly_revenue.length
+                    ? data.monthly_revenue.map(item => new Date(item.month).toLocaleString('default', { month: 'long' }))
+                    : ['No Data']
+            }
+        });
+
+        bestSellingProductsChart.updateSeries([{
+            name: 'Units Sold',
+            data: data.best_selling_products.length ? data.best_selling_products.map(item => item.total_sold) : [0]
+        }]);
+        bestSellingProductsChart.updateOptions({
+            xaxis: {
+                categories: data.best_selling_products.length
+                    ? data.best_selling_products.map(item => item.product__name)
+                    : ['No Data']
+            }
+        });
+
+        heatmapChart.updateSeries(data.heatmap_data.length ? data.heatmap_data.map(item => item.clicks) : [0]);
+        heatmapChart.updateOptions({
+            labels: data.heatmap_data.length
+                ? data.heatmap_data.map(item => item.product__name)
+                : ['No Data']
+        });
+
+        topCustomersChart.updateSeries([
+            {
+                name: 'Total Amount Spent (₦)',
+                data: data.top_customers.length ? data.top_customers.map(customer => customer.total_spent) : [0]
+            },
+            {
+                name: 'Total Items Bought',
+                data: data.top_customers.length ? data.top_customers.map(customer => customer.total_items) : [0]
+            }
+        ]);
+        topCustomersChart.updateOptions({
+            xaxis: {
+                categories: data.top_customers.length
+                    ? data.top_customers.map(customer => customer.order__customer__username)
+                    : ['No Data']
+            }
+        });
+
+        topProductsChart.updateSeries([
+            {
+                name: 'Total Units Sold',
+                data: data.top_performing_products.length ? data.top_performing_products.map(product => product.total_sold) : [0]
+            },
+            {
+                name: 'Total Revenue (₦)',
+                data: data.top_performing_products.length ? data.top_performing_products.map(product => product.total_revenue) : [0]
+            }
+        ]);
+        topProductsChart.updateOptions({
+            xaxis: {
+                categories: data.top_performing_products.length
+                    ? data.top_performing_products.map(product => product.product__name)
+                    : ['No Data']
+            }
+        });
+
+        document.getElementById('totalRevenue').innerText = data.total_revenue || 0;
+    };
+
+    // AJAX Filter Logic
+    document.getElementById('applyFilters').addEventListener('click', () => {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+    
+        if (!startDate || !endDate) {
+            alert('Please select both start and end dates!');
+            return;
+        }
+    
+        fetch(`/tenant/dashboard/analytics/?start_date=${startDate}&end_date=${endDate}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Filtered Data:', data); // Debugging
+                updateCharts(data);
+            })
+            .catch(error => console.error('AJAX Error:', error));
+    });
+</script>
+{% endblock %}

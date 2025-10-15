@@ -1,0 +1,33 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <div class="md-24  ">    
+        <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-8 px-10 mt-16 mb-12 mx-4  ">
+            <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">
+                Set Up Delivery Method
+            </h1>
+            <form method="post" class="space-y-6" novalidate>
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <div class="grid grid-cols-2">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                        {{ field|add_class:"appearance-none w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" }}
+                        {% if field.errors %}
+                            <p class="mt-1 text-sm text-red-500">{{ field.errors|join:", " }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="flex justify-between items-center">
+                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Save Delivery Method
+                    </button>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{% url 'page_settings:delivery_methods_list' %}" class="text-blue-500 hover:underline">View All Delivery Methods</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

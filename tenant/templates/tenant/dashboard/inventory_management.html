@@ -1,0 +1,131 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+{% block content %}
+
+<div class="container mx-auto p-6 mt-12">
+    <h1 class="text-2xl font-bold mb-4">Inventory Management</h1>
+
+    <!-- Low Stock Alerts -->
+    <section id="inventory-alerts" class="bg-white shadow rounded-lg p-6 mt-6 {% if low_stock_alerts|length > 0 %} {% else %}hidden {% endif %}">
+        <h2 class="text-lg md:text-xl font-bold mb-4">Inventory Alerts</h2>
+
+        <form method="get" class="mb-4">
+            <div class="flex items-center space-x-4">
+                <!-- Search -->
+                <input 
+                    type="text" 
+                    name="search" 
+                    value="{{ request.GET.search }}" 
+                    placeholder="Search products..." 
+                    class="border rounded px-4 py-2 w-full"
+                >
+                <!-- Sort -->
+                <select name="sort" class="border rounded px-4 py-2">
+                    <option value="name" {% if request.GET.sort == "name" %}selected{% endif %}>Sort by Name</option>
+                    <option value="stock" {% if request.GET.sort == "stock" %}selected{% endif %}>Sort by Stock</option>
+                </select>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Apply</button>
+            </div>
+        </form>
+
+        <form method="post">
+            {% csrf_token %}
+            <ul>
+                {% if low_stock_alerts %}
+                    {% for alert in low_stock_alerts %}
+                        <li class="text-red-600 flex items-center justify-between">
+                            <span>
+                                <input type="checkbox" name="selected_items" value="{{ alert.id }}" class="mr-2">
+                                {{ alert.name }}: Only {{ alert.stock }} left!
+                            </span>
+                            <button 
+                                type="submit" 
+                                name="bulk_action" 
+                                value="restock_{{ alert.id }}" 
+                                class="ml-2 text-blue-500 hover:underline text-sm md:text-md"
+                            >
+                                Restock
+                            </button>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="text-gray-500">No low-stock alerts at the moment.</li>
+                {% endif %}
+            </ul>
+
+            <!-- Bulk Actions -->
+            <div class="mt-4">
+                <select name="bulk_action" class="border rounded px-4 py-2">
+                    <option value="restock">Restock Selected</option>
+                    <option value="remove">Remove Selected</option>
+                </select>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Apply Bulk Action</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Product Table -->
+    <table class="table-auto w-full bg-white shadow rounded-lg mb-6 mt-6">
+        <thead class="text-xs md-text-lg">
+            <tr>
+                <th class="px-4 py-2">Product</th>
+                <th class="px-4 py-2">Price</th>
+                <th class="px-4 py-2">Stock</th>
+                <th class="px-4 py-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="text-xs md-text-lg">
+            {% for product in products %}
+                <tr>
+                    <td class="border px-4 py-2">{{ product.name }}</td>
+                    <td class="border px-4 py-2">${{ product.price }}</td>
+                    <td class="border px-4 py-2">{{ product.stock }}</td>
+                    <td class="border px-4 py-2">
+                        <form method="post" action="{% url 'tenant:adjust_stock' product.id %}">
+                            {% csrf_token %}
+                            <input type="number" name="new_stock" min="0" value="{{ product.stock }}" class="border rounded px-2 py-1 w-20">
+                            <button type="submit" class="bg-blue-500 text-xs md-text-sm shadow text-white px-2 py-1 rounded">Adjust Stock</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Audit Logs -->
+    <section class="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 class="text-lg font-bold mb-4">Audit Logs</h2>
+        <ul>
+            {% for log in audit_logs %}
+                <li>
+                    {{ log.created_at|date:"Y-m-d H:i" }}: {{ log.action }} - {{ log.quantity_changed }} 
+                    (Stock: {{ log.current_stock }})
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Forecasting -->
+    <section class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-bold mb-4">Stock Forecast</h2>
+        <table class="table-auto w-full">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Product</th>
+                    <th class="px-4 py-2">Sales Last Week</th>
+                    <th class="px-4 py-2">Forecast for Next Week</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in forecast_data %}
+                    <tr>
+                        <td class="border px-4 py-2">{{ data.product.name }}</td>
+                        <td class="border px-4 py-2">{{ data.sales_last_week }}</td>
+                        <td class="border px-4 py-2">{{ data.forecast_next_week }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+
+{% endblock %}

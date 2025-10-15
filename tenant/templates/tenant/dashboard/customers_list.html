@@ -1,0 +1,131 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="border text-sm px-2 bg-gray-100 py-10 gap-6 shadow mt-10 ">
+    <h2 class="text-2xl mb-4">Customers</h2>
+    <div class="container mx-auto p- mt- bg-gray-50"> 
+        <div class="container mx-auto p- mt-12">
+            <div class="-mt-10">
+                <!-- Search and Sort Form -->
+                <form method="GET" class="mb-4 flex flex-wrap gap-2 items-center">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search by name or email"
+                        value="{{ search_query }}"
+                        class="p-2 border rounded h-8 outline-none"
+                    />
+                    <button
+                        type="submit"
+                        class="bg-blue-500 text-white py-2 px-4 rounded text-xs hover:bg-blue-600 hover:shadow-md"
+                    >
+                        Search
+                    </button>
+                    <select
+                        name="sort_by"
+                        onchange="this.form.submit()"
+                        class="p-2 border rounded bg-green-50 text-xs"
+                    >
+                        <option value="name" {% if sort_by == "name" %}selected{% endif %}>
+                            Sort by Name
+                        </option>
+                        <option value="date" {% if sort_by == "date" %}selected{% endif %}>
+                            Sort by Date Joined
+                        </option>
+                    </select>
+                    <select
+                        name="order"
+                        onchange="this.form.submit()"
+                        class="p-2 border rounded bg-green-50 text-xs"
+                    >
+                        <option value="asc" {% if order == "asc" %}selected{% endif %}>
+                            Ascending
+                        </option>
+                        <option value="desc" {% if order == "desc" %}selected{% endif %}>
+                            Descending
+                        </option>
+                    </select>
+                </form>
+            </div>
+            <!-- Download CSV Button -->
+            <div class="flex gap-4 mt-4">
+                <a href="{% url 'tenant:export_users_csv' %}">
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold p-2 rounded text-xs">
+                        Download CSV
+                    </button>
+                </a>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="overflow-x-auto mt-12 shadow-sm text-xs md:text-md">
+                <table class="table-auto w-full bg-white shadow-md rounded border overflow-hidden">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-center px-4 py-2">Name</th>
+                            <th class="text-center px-4 py-2">Email</th>
+                            <th class="text-center px-4 py-2">Phone Number</th>
+                            <th class="text-center px-4 py-2">Date Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers_page %}
+                        <tr>
+                            <td class="text-center border px-4 py-2">{{ customer.name }}</td>
+                            <td class="text-center border px-4 py-2">{{ customer.email }}</td>
+                            <td class="text-center border px-4 py-2">{{ customer.phone_number }}</td>
+                            <td class="text-center border px-4 py-2">{{ customer.date_joined }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center p-4">No customers found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8 flex justify-center">
+                <ul class="flex space-x-4">
+                    {% if customers_page.has_previous %}
+                    <li>
+                        <a
+                            href="?page={{ customers_page.previous_page_number }}&search={{ search_query }}&sort_by={{ sort_by }}&order={{ order }}"
+                            class="px-4 py-2 border rounded bg-gray-300 hover:bg-gray-400 hover:text-gray-50"
+                        >
+                            Previous
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% for page_num in customers_page.paginator.page_range %}
+                    {% if page_num == customers_page.number %}
+                    <li>
+                        <span class="px-4 py-2 border rounded bg-gray-500 text-white">{{ page_num }}</span>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a
+                            href="?page={{ page_num }}&search={{ search_query }}&sort_by={{ sort_by }}&order={{ order }}"
+                            class="px-4 py-2 border rounded bg-gray-200 hover:bg-gray-300"
+                        >
+                            {{ page_num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if customers_page.has_next %}
+                    <li>
+                        <a
+                            href="?page={{ customers_page.next_page_number }}&search={{ search_query }}&sort_by={{ sort_by }}&order={{ order }}"
+                            class="px-4 py-2 border rounded bg-gray-300 hover:bg-gray-400 hover:text-gray-50"
+                        >
+                            Next
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

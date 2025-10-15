@@ -1,0 +1,47 @@
+<aside id="sidebar" class="fixed inset-y-0 left-0 w-48 bg-gray-700 shadow-md transform -translate-x-full lg:translate-x-0 z-30 transition-transform">
+    <div class="p-4 border-b">
+        <h1 class="text-xl font-bold text-purple-500">{{ current_tenant }}</h1>
+    </div>
+    <nav class="p-2 space-y-2 mt-4 text-sm ">
+        <a href="{% url 'tenant:dashboard' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'dashboard' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-home"></i>
+            Dashboard
+        </a>
+        <a href="{% url 'tenant:admin_product_list' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'admin_product_list' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-box-open"></i>
+            Products
+        </a>
+        <a href=" " class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'order_history' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Orders
+        </a>
+        <a href="{% url 'tenant:inventory' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'inventory' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-cart-flatbed"></i>
+            Inventory
+        </a>
+        <a href="{% url 'tenant:analytics' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'analytics' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-chart-line"></i>
+            Analytics
+        </a>
+        <a href="{% url 'tenant:invoice_list' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'invoice_list' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-file-invoice"></i>
+            Invoice
+        </a>
+        <a href="{% url 'tenant:customer_list_view' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'customer_list_view' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-users"></i>
+            Customers
+        </a>
+        <a href="{% url 'tools_andfeatures:useful_tools' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'useful_tools' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-toolbox"></i>
+            Useful tools
+        </a>
+        <a href="tenant:Campaign" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-envelope"></i>
+            Campaign
+        </a>
+        <a href="{% url 'page_settings:settings' %}" class="block py-2 px-4 text-gray-50 hover:text-purple-600 hover:bg-gray-200 rounded-md {% if request.resolver_match.url_name == 'settings' %}bg-gray-100 shadow-inner text-gray-900 {% endif %}">
+            <i class="fa-solid fa-gear"></i>
+            Settings
+        </a>
+    </nav>
+</aside>

@@ -1,0 +1,111 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+
+{% block content %}
+    <div class="container mx-auto mt- px-6 text-xs  ">
+        <h1 class="text-2xl font-bold mb-3 mt-14">Store Page Settings</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Settings Form -->
+            <div class="mb-12  ">
+                <form method="POST" enctype="multipart/form-data" class="space-y-4" id="settings-form">
+                    {% csrf_token %}
+                    {% for items in form %}
+                        <div class="bg-gray-100 py-2 px-6 rounded shadow-md  ">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-1" for="{{ items.id_for_label }}">
+                                    {{ items.label }}
+                                </label>
+                                {{ items }}
+                                {% if items.errors %}
+                                    <p class="text-red-500 text-sm mt-1">{{ items.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="flex justify-end">
+                        <button type="button" id="save-preview-button" class="bg-green-500 text-white px-2 py-2 rounded hover:bg-green-600 mt-4  ">
+                            Save and Preview
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Live Preview for large screens -->
+            <div id="preview-container" class="relative hidden md:block bg-gray-100 rounded shadow-md overflow-auto h-full mb-24 -mt-8 border-t ">
+                <span class="absolute top-0 right-0 bg-red-200 text-gray-600 px-2 py-1 text-xs rounded-bl-lg ">
+                    Live Preview
+                </span>
+                <iframe id="preview-iframe" class="w-full h-full pointer-events-none mb-24 "></iframe>
+                <!-- Overlay to disable interactions -->
+            </div>        
+        </div>
+    </div>
+
+    <!-- Modal for small screens -->
+    <div id="preview-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded shadow-lg w-full max-w-screen-md mx-auto p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Preview</h2>
+                <button id="close-modal" class="text-red-500 hover:text-red-700 font-bold">&times;</button>
+            </div>
+            <iframe id="modal-preview-iframe" class="w-full h-96 pointer-events-none"></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("settings-form");
+            const savePreviewButton = document.getElementById("save-preview-button");
+            const previewIframe = document.getElementById("preview-iframe");
+            const modal = document.getElementById("preview-modal");
+            const modalIframe = document.getElementById("modal-preview-iframe");
+            const closeModal = document.getElementById("close-modal");
+
+            savePreviewButton.addEventListener("click", () => {
+                const formData = new FormData(form);
+
+                // Save settings and fetch preview
+                fetch("{% url 'page_settings:settings_page' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: formData,
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Failed to save settings");
+                        }
+                        return fetch("{% url 'tenant:store' %}", { method: "GET" });
+                    })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch preview");
+                        }
+                        return response.text();
+                    })
+                    .then((data) => {
+                        if (window.innerWidth < 768) {
+                            modalIframe.srcdoc = data;
+                            modal.classList.remove("hidden");
+                        } else {
+                            previewIframe.srcdoc = data;
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            });
+
+            closeModal.addEventListener("click", () => {
+                modal.classList.add("hidden");
+            });
+
+            modal.addEventListener("click", (event) => {
+                if (event.target === modal) {
+                    modal.classList.add("hidden");
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "tenant/main.html" %}
+{% block content %}
+<div class="container mx-auto mt-12 px-12 ">
+    <h2 class="text-2xl font-bold mb-4">User Check-In</h2>
+    
+    <div class="mx-12">
+        <form method="POST" action="{% url 'tenant:error' %}">
+                {% csrf_token %}
+            <label for="email_or_phone" class="block font-semibold mt-4">Email or Phone:</label>
+            <input
+                type="text"
+                name="email_or_phone"
+                id="email_or_phone"
+                class="border rounded p-2 w-full mb-4  "
+                placeholder="Enter your email or phone number"
+            />
+            <button
+                type="submit"
+                class="bg-blue-500 text-white px-12 md:px-24 py-2 text-xs md:text-sm rounded shadow hover:bg-blue-600"
+            >
+                Confirm Order
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

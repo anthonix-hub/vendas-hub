@@ -1,0 +1,80 @@
+{% extends "tenant/main.html" %}
+{% block content %}
+<div class="container mx-auto mt-6 px-4">
+    <h2 class="text-2xl font-bold mb-4 mt-12">Shipping Address</h2>
+
+    {% if address_check %}
+        <!-- Display Current Shipping Address -->
+        <div class="border p-4 rounded shadow-md mb-4 grid justify-center md:justify-end">
+            <div class="border px-4 md:px-24 py-2 shadow rounded text-xs">
+                <h3 class="text-lg font-semibold text-green-400 border-b">Current Active Shipping Address:</h3>
+                <p><strong>Address:</strong> {{ shipping_address.address }}</p>
+                <p><strong>City:</strong> {{ shipping_address.city }}</p>
+                <p><strong>State:</strong> {{ shipping_address.state }}</p>
+                <p><strong>Country:</strong> {{ shipping_address.country }}</p>
+                <p><strong>Zipcode:</strong> {{ shipping_address.zipcode }}</p>
+            </div>
+        </div>
+        <p class="text-green-600">You can proceed to checkout with the address above.</p>
+    {% else %}
+        <!-- Add New Shipping Address -->
+        <h3 class="text-lg font-semibold mb-2">Add a Shipping Address</h3>
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            <div class="grid gap-4">
+                <div>
+                    <input 
+                        type="text" 
+                        name="address" 
+                        id="address" 
+                        placeholder="Address" 
+                        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <div>
+                    <input 
+                        type="text" 
+                        name="city" 
+                        id="city" 
+                        placeholder="City" 
+                        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <div>
+                    <input 
+                        type="text" 
+                        name="state" 
+                        id="state" 
+                        placeholder="State" 
+                        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <div>
+                    <input 
+                        type="text" 
+                        name="country" 
+                        id="country" 
+                        placeholder="Country" 
+                        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+                <div>
+                    <input 
+                        type="text" 
+                        name="zipcode" 
+                        id="zipcode" 
+                        placeholder="Zipcode" 
+                        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+            </div>
+            <button
+                type="submit"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+                Save Address
+            </button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

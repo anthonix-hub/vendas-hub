@@ -1,0 +1,60 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+
+{% block content %}
+<div class="border md:grid-cols-4 text-sm px-2 bg-gray-100 py-10 gap-6 shadow mt-10">
+    <div class="container mx-auto p-4">
+        <div class="container mx-auto p-4 mb-24 md:px-60 lg:px-72">
+            <h2 class="text-2xl font-semibold mb-6 mt-6 drop-shadow-md justify-items-start">
+                Product ID {{ form.instance.pk|default:"Add New Product" }}
+            </h2>
+            <form method="post" enctype="multipart/form-data" class="space-y-6 bg-white p-6 rounded-lg shadow-lg">
+                {% csrf_token %}
+                <!-- Product Name -->
+                <div class="flex flex-col">
+                    <label for="name" class="mb-1 text-sm font-medium text-gray-700">Product Name</label>
+                    <input type="text" name="name" id="name" value="{{ form.name.value|default:'' }}" class="shadow-md border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" placeholder="Enter product name">
+                    {% if form.name.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ form.name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <!-- Product Description -->
+                <div class="flex flex-col">
+                    <label for="description" class="mb-1 text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" id="description" cols="30" rows="5" class="shadow-md border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" placeholder="Enter product description">{{ form.description.value|default:'' }}</textarea>
+                    {% if form.description.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ form.description.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <!-- Product Price -->
+                <div class="flex flex-col">
+                    <label for="price" class="mb-1 text-sm font-medium text-gray-700">Price</label>
+                    <input type="number" name="price" id="price" value="{{ form.price.value|default:'' }}" class="shadow-md border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" placeholder="Enter product price">
+                    {% if form.price.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ form.price.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <!-- Product Stock -->
+                <div class="flex flex-col">
+                    <label for="stock" class="mb-1 text-sm font-medium text-gray-700">Stock Quantity</label>
+                    <input type="number" name="stock" id="stock" value="{{ form.stock.value|default:'' }}" class="shadow-md border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" placeholder="Enter available stock">
+                    {% if form.stock.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ form.stock.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <!-- Product Image -->
+                <div class="flex flex-col">
+                    <label for="image" class="mb-1 text-sm font-medium text-gray-700">Product Image</label>
+                    <input type="file" name="image" id="image" class="shadow-md border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+                    {% if form.image.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ form.image.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md hover:shadow-lg transition duration-150">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

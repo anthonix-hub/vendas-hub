@@ -1,0 +1,45 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+
+{% block content %}
+    <div class="container mx-auto py-8 px-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 mt-8 text-center sm:text-left">
+            Delivery Methods
+        </h1>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            {% for method in methods %}
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <div class="mb-4 sm:mb-0 space-y-1">
+                        <h2 class="text-lg font-semibold text-gray-800">{{ method.delivery_point }}</h2>
+                        <p class="text-sm text-gray-600">Amount: 
+                            <span class="text-gray-800 font-medium">{{ method.delivery_amount }}</span>
+                        </p>
+                        <p class="text-sm text-gray-600">Type: 
+                            <span class="text-gray-800 font-medium">{{ method.get_delivery_type_display }}</span>
+                        </p>
+                        <p class="text-sm text-gray-600">Active: 
+                            <span class="text-gray-800 font-medium">{{ method.is_active|yesno:"Yes,No" }}</span>
+                        </p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="{% url 'page_settings:delivery_method_edit' method.id %}" class="text- hover:bg-blue-700 bg-blue-500 font-medium shadow-sm py-1 px-3 rounded-md  ">edit</a>
+                        <a href="{% url 'page_settings:delivery_method_delete' method.id %}" class="text- hover:bg-red-700 bg-red-500 font-medium shadow-sm py-1 px-1 rounded-md  ">delete</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                <p class="text-gray-500">No delivery methods added yet.</p>
+            </div>
+            {% endfor %}
+            <div class="">
+                <div class="mt-6 flex justify-center sm:justify-start">
+                    <a href="{% url 'page_settings:delivery_method_create' %}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                        Add New Delivery Method
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

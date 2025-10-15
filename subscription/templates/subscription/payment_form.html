@@ -1,0 +1,91 @@
+{% load static %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+
+<div class="px-12 mt-24">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <p>Subscription ID: {{ subscription_id }}</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 md:border">
+            <!-- Default Payment Section -->
+            <div id="default_payment_section" class="border-r mx-2 text-xs md:text-sm flex items-center gap-6">
+                <div>
+                    <h1>Make a Payment</h1>
+                </div>
+                <div>
+                    <label for="amount">Amount (₦):</label>
+                    <input type="text" value="{{ subscription.plan.price|floatformat:0 }}" 
+                           name="amount" 
+                           placeholder="{{ subscription.plan.price }}" 
+                           required readonly 
+                           class="border px-4">
+                    <button type="submit" id="default_payment_button" 
+                            class="border shadow px-4 py rounded">
+                        Pay
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bank Transfer Section -->
+            <div id="bank_transfer_section" class="hidden lg:block border-l px-4">
+                <h2 class="text-lg font-bold">Bank Transfer</h2>
+                <p>Please make the payment within 45 minutes. Waiting for confirmation...</p>
+                <div id="countdown_timer" class="text-red-500 text-sm font-bold"></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentOption = "{{ payment_option }}";
+        const bankTransferSection = document.getElementById('bank_transfer_section');
+        const defaultPaymentSection = document.getElementById('default_payment_section');
+        const countdownTimer = document.getElementById('countdown_timer');
+
+        // Show/hide sections based on selected payment method
+        if (paymentOption === "bank_transfer") {
+            bankTransferSection.classList.remove('hidden');
+            defaultPaymentSection.classList.add('hidden');
+            startCountdown();
+
+            // Poll server for admin confirmation
+            const interval = setInterval(async function () {
+                try {
+                    const response = await fetch('/check-confirmation/{{ subscription_id }}/');
+                    const data = await response.json();
+
+                    if (data.is_successful) {
+                        clearInterval(interval);
+                        window.location.href = "/admin/";
+                    }
+                } catch (error) {
+                    console.error('Error checking confirmation:', error);
+                }
+            }, 5000); // Poll every 5 seconds
+        } else {
+            bankTransferSection.classList.add('hidden');
+            defaultPaymentSection.classList.remove('hidden');
+        }
+
+        // Start the 45-minute countdown
+        function startCountdown() {
+            let timeRemaining = 45 * 60; // 45 minutes in seconds
+
+            const timerInterval = setInterval(function () {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    countdownTimer.innerHTML = "Time expired. Please try again.";
+                    return;
+                }
+
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                countdownTimer.innerHTML = `Time remaining: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timeRemaining--;
+            }, 1000); // Update every second
+        }
+    });
+</script>

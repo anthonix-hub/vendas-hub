@@ -1,0 +1,314 @@
+{% extends "tenant/main.html" %}
+{% load static %}
+{% load humanize %} 
+{% block content %}
+<div class="md:px-4 md:mx-6 mx-4">
+    <h3 class="mt-14">
+        <span class="drop-shadow-md text-indigo-600 md:text-sm text-xs leading-snug font-manrope">
+            <!-- ?? {{ active_mail_phone }} >>>> -<<<< -->
+        </span>
+    </h3>
+    <div class="justify-center flex md:-mx-8 -mx-4">
+        {% if page_setup.banner %}
+            <img src="{{ page_setup.banner.url }}" alt="Top Banner" class="flex justify-center">
+        {% else %}
+            <p class=""></p>
+        {% endif %}
+        
+    </div>
+    <div id="storeProducts" class="md:gap-6 gap-2 justify-center mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:px-6">
+        {% if page_obj %}
+            {% for item in page_obj %}
+                <div class="shadow-lg rounded-lg hover:shadow-2xl bg-white mt-4 py-4 hover:border-blue-500 border-t-2 grid justify-between transition-all duration-300 delay-100">
+                    <div class="-space-y-2">
+                        <div class="view-item md:px-12 cursor-pointer justify-center flex py-2" data-product="{{ item.id }}"
+                             onclick="trackProductClick({{ item.id }}, '{{ item.name|escapejs }}', {{ item.price }})">
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="object-contain lazyload" data-src="{{ item.image.url }}">
+                        </div>
+                        <div class="text-sm md:text-lg grid justify-center mt-2 px-4 py-2">
+                            <div>{{ item.name }}</div>
+                            <div class="mt-2 font-bold">₦{{ item.price|floatformat:2|intcomma }}</div>
+                        </div>
+                    </div>
+                    <div class="mb-2 flex space-x-2 text-xs justify-center bg-gray-100 py-3 shadow-inner rounded-b-2xl">
+                        <div class="flex text-xs md:gap-3 gap-1 items-center justify-center">
+                            <button class="view-item border py-2 px-6 text-gray-600 hover:shadow-md hover:bg-yellow-300 rounded-md bg-yellow-50"
+                                    data-product="{{ item.id }}" onclick="trackProductClick({{ item.id }}, '{{ item.name|escapejs }}', {{ item.price }})">
+                                Preview
+                            </button>
+                            <button class="update-cart border py-2 px-6 text-gray-50 bg-{{ page_setup.button_color }}-{{ page_setup.button_color_shade }} hover:shadow-md rounded"
+                                    data-product="{{ item.id }}" data-action="add">
+                                <i class="fa-solid fa-plus"></i> Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-lg mb-10">Preview Sample Page</div>
+            <div class="shadow-lg rounded hover:shadow-2xl bg-white mt-4 py-2 hover:border-blue-500 border-t-2">
+                <div class="py-">
+                    <div class="view-item border md:px-12 cursor-pointer justify-center flex py-2">
+                        <img src="{% static 'images/placeholder.png' %}" alt="placeholder" class="object-contain">
+                    </div>
+                    <div class="text-sm md:text-lg text-gray-500 font-bold grid justify-center mt-2 px-4 py-2">
+                        <div>Sample</div>
+                        <div class="text-gray-700 mt-2">₦0.00</div>
+                    </div>
+                </div>
+                <div class="mb-2 flex space-x-1 text-xs justify-center bg-gray-100 py-2 shadow-inner">
+                    <div class="flex text-xs md:gap-3 gap-1 items-center justify-center">
+                        <button class="view-item border py-2 px-6 text-gray-600 hover:shadow-md hover:bg-yellow-300 rounded-md bg-yellow-50">
+                            Preview
+                        </button>
+                        <button class="update-cart border py-2 px-6 text-gray-50 bg-gray-600 hover:shadow-md rounded">
+                            <i class="fa-solid fa-plus"></i> Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="shadow-lg rounded hover:shadow-2xl bg-white mt-4 py-2 hover:border-blue-500 border-t-2">
+                <div class="py-">
+                    <div class="view-item border md:px-12 cursor-pointer justify-center flex py-2">
+                        <img src="{% static 'images/placeholder.png' %}" alt="placeholder" class="object-contain">
+                    </div>
+                    <div class="text-sm md:text-lg text-gray-500 font-bold grid justify-center mt-2 px-4 py-2">
+                        <div>Sample</div>
+                        <div class="text-gray-700 mt-2">₦0.000</div>
+                    </div>
+                </div>
+                <div class="mb-2 flex space-x-1 text-xs justify-center bg-gray-100 py-2 shadow-inner">
+                    <div class="flex text-xs md:gap-3 gap-1 items-center justify-center">
+                        <button class="view-item border py-2 px-6 text-gray-600 hover:shadow-md hover:bg-yellow-300 rounded-md bg-yellow-50">
+                            Preview
+                        </button>
+                        <button class="update-cart border py-2 px-6 text-gray-50 bg-gray-600 hover:shadow-md rounded">
+                            <i class="fa-solid fa-plus"></i> Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-8 flex justify-center text-xs">
+        <ul class="flex space-x-4">
+            {% if page_obj.has_previous %}
+                <li>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="px-2 py-1 border rounded bg-gray-300 hover:bg-gray-400 hover:text-gray-50">
+                        Previous
+                    </a>
+                </li>
+            {% endif %}
+            {% for page_num in paginator.page_range %}
+                {% if page_num == page_obj.number %}
+                    <li>
+                        <span class="px-2 py-1 border rounded bg-blue-500 text-white">{{ page_num }}</span>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="?page={{ page_num }}" class="px-2 py-1 border rounded bg-gray-200 hover:bg-gray-300">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li>
+                    <a href="?page={{ page_obj.next_page_number }}" class="px-2 py-1 border rounded bg-gray-300 hover:bg-gray-400 hover:text-gray-50">
+                        Next
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<!-- Cart Modal -->
+<div id="cartModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-4 rounded shadow-lg text-center" role="dialog" aria-labelledby="cartModalTitle">
+        <p id="cartModalTitle">Item added to cart!</p>
+        <div class="flex justify-around mt-4 gap-2">
+            <button id="modalCloseBtn" class="hover:bg-green-400 bg-green-300 text-white text-xs py-2 px-2 rounded">
+                continue shopping
+            </button>
+            <a href="{% url 'tenant:cart' %}" class="hover:bg-blue-400 bg-blue-300 text-white text-xs py-2 px-2 rounded">
+                Check item(s) Cart
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Item Modal -->
+<div id="itemModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-4 rounded shadow-lg text-center w-96" role="dialog" aria-labelledby="itemModalTitle">
+        <img id="itemImage" src="" alt="Item Image" class="mx-auto w-72 h-72 object-cover">
+        <div id="itemModalTitle" class="text-lg font-semibold mt-4"></div>
+        <div id="itemPrice" class="mt-2 text-lg text-gray-700"></div>
+        <div id="itemDescription" class="px-6 mt-2 text-xs text-gray-600"></div>
+        <div class="flex gap-2 mt-3 justify-center text-xs">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="border shadow text-blue-600 py-1 px-2 rounded-md hover:shadow-lg bg-gray-50">
+                <span class="flex">
+                    <span>share</span>
+                    <i class="fa-brands fa-facebook"></i>
+                </span>
+            </a>
+            <a href="https://www.pinterest.com/pin/create/button/?url={{ request.build_absolute_uri }}&media={{ product.image.url }}&description={{ product.description }}" target="_blank" class="border shadow text-red-500 py-1 px-2 rounded-md hover:shadow-lg bg-gray-50">
+                <span>share</span>
+                <i class="fa fa-pinterest"></i>
+            </a>
+            <a href="https://www.instagram.com/pin/create/button/?url={{ request.build_absolute_uri }}&media={{ product.image.url }}&description={{ product.description }}" target="_blank" class="border shadow text-red-500 py-1 px-2 rounded-md hover:shadow-lg bg-gray-50">
+                <span>share</span>
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+        </div>
+        <button id="itemCloseBtn" class="hover:bg-red-400 bg-red-300 text-white shadow-md text-xs py-2 px-4 mt-4 rounded">Close</button>
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+</div>
+
+<!-- DOM Initialization Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        initializeAddToCart();
+        initializeViewItem();
+        initializeCloseButtons();
+    });
+
+    function initializeAddToCart() {
+        const addToCartButtons = document.querySelectorAll(".update-cart");
+        const cartModal = document.getElementById("cartModal");
+        const loadingSpinner = document.getElementById("loadingSpinner");
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const productId = this.dataset.product;
+                const action = this.dataset.action;
+
+                loadingSpinner.classList.remove("hidden");
+                addToCart(productId, action)
+                    .then(() => {
+                        loadingSpinner.classList.add("hidden");
+                        cartModal.classList.remove("hidden");
+                        updateCartIcon();
+                    })
+                    .catch(err => {
+                        loadingSpinner.classList.add("hidden");
+                        alert("Error adding to cart. Please try again.");
+                        console.error("Error:", err);
+                    });
+            });
+        });
+    }
+
+    async function addToCart(productId, action) {
+        const response = await fetch('add_to_cart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ 'product_id': productId, 'action': action })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    function updateCartIcon() {
+        // Optional: update cart icon count if using an AJAX endpoint for it
+    }
+
+    function initializeViewItem() {
+        const viewItemButtons = document.querySelectorAll(".view-item");
+        const itemModal = document.getElementById("itemModal");
+        const loadingSpinner = document.getElementById("loadingSpinner");
+
+        viewItemButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const productId = this.dataset.product;
+                if (!productId) return;
+
+                loadingSpinner.classList.remove("hidden");
+                fetchProductDetails(productId)
+                    .then(data => {
+                        loadingSpinner.classList.add("hidden");
+                        displayProductDetails(data);
+                        itemModal.classList.remove("hidden");
+                    })
+                    .catch(err => {
+                        loadingSpinner.classList.add("hidden");
+                        alert("Error fetching product details.");
+                        console.error("Error:", err);
+                    });
+            });
+        });
+    }
+
+    async function fetchProductDetails(productId) {
+        const response = await fetch(`product/${productId}/`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    function displayProductDetails(data) {
+        document.getElementById("itemImage").src = data.image;
+        document.getElementById("itemModalTitle").innerText = data.name;
+        document.getElementById("itemPrice").innerText = `₦${data.price}`;
+        document.getElementById("itemDescription").innerText = data.description;
+    }
+
+    function initializeCloseButtons() {
+        const cartModal = document.getElementById("cartModal");
+        const modalCloseBtn = document.getElementById("modalCloseBtn");
+        const itemModal = document.getElementById("itemModal");
+        const itemCloseBtn = document.getElementById("itemCloseBtn");
+
+        if (modalCloseBtn) {
+            modalCloseBtn.addEventListener("click", () => cartModal.classList.add("hidden"));
+        }
+        if (itemCloseBtn) {
+            itemCloseBtn.addEventListener("click", () => itemModal.classList.add("hidden"));
+        }
+    }
+
+    window.addEventListener("beforeunload", function () {
+        navigator.sendBeacon("{% url 'tools_andfeatures:track_exit' %}");
+    });
+
+    function trackProductClick(productId, productName, productPrice) {
+        let clickTime = new Date().toISOString();
+        fetch("{% url 'tenant:track_event' %}", {
+            method: "POST",
+            body: JSON.stringify({
+                event: "click",
+                product_id: productId,
+                product_name: productName,
+                product_price: productPrice,
+                click_time: clickTime
+            }),
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+        }).then(response => {
+            if (!response.ok) {
+                console.error("Error response from server:", response.status, response.statusText);
+                return response.text().then(text => { throw new Error(text) });
+            }
+            return response.json();
+          })
+          .then(data => console.log("Event recorded:", data))
+          .catch(error => console.error("Error tracking event:", error));
+    }
+</script>
+{% endblock content %}

@@ -1,0 +1,134 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-6" style="font-family: Arial, sans-serif; font-size: 14px;">
+    <div class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6 border border-gray-200" id="invoice_slip-container">
+
+        
+        <div class="flex justify-end space-x-2 mb-6 no-print">
+            <a href="{% url 'tenant:download_invoice' invoice.id %}"
+               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+               download>
+                <i class="fas fa-download mr-1"></i> Download PDF {# Optional: Font Awesome icon #}
+            </a>
+            <button onclick="window.print();"
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <i class="fas fa-print mr-1"></i> Print Invoice {# Optional: Font Awesome icon #}
+            </button>
+        </div>
+
+        {# --- Start of content to be printed --- #}
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Invoice</h1>
+
+        <!-- Invoice Header -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold">Invoice Details</h2>
+            <p><strong>Invoice Number:</strong> {{ invoice.invoice_number }}</p>
+            <p><strong>Created At:</strong> {{ invoice.created_at|date:"F j, Y, g:i a" }}</p>
+            <p><strong>Due Date:</strong> {{ invoice.due_date|date:"F j, Y" }}</p>
+            <p><strong>Status:</strong> <span class="{% if invoice.is_paid %}text-green-600 font-semibold{% else %}text-red-600 font-semibold{% endif %}">{% if invoice.is_paid %}Paid{% else %}Unpaid{% endif %}</span></p>
+        </div>
+
+        <!-- Order Details -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold">Order Details</h2>
+            <p><strong>Order ID:</strong> {{ invoice.order.id }}</p>
+            <p><strong>Tenant:</strong> {{ invoice.order.tenant.name }}</p>
+            <p><strong>Customer:</strong> {{ invoice.order.customer.name }}</p>
+            <p><strong>Ordered Date:</strong> {{ invoice.order.ordered_date|date:"F j, Y, g:i a" }}</p>
+            <p><strong>Payment Reference:</strong> {{ invoice.order.payment_reference|default:"N/A" }}</p>
+            <p><strong>Payment Method:</strong> {{ invoice.order.payment_method|default:"N/A" }}</p>
+        </div>
+
+        <!-- Product Details -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold">Products</h2>
+            <table class="table-auto w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 px-4 py-2 text-left">Product</th>
+                        <th class="border border-gray-300 px-4 py-2 text-center">Quantity</th>
+                        <th class="border border-gray-300 px-4 py-2 text-right">Unit Price</th>
+                        <th class="border border-gray-300 px-4 py-2 text-right">Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# Corrected loop and added empty state #}
+                    {% for item in invoice.order.items.all %}
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">{{ item.product.name }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">{{ item.quantity }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">₦{{ item.product.price|floatformat:2 }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">₦{{ item.get_total|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="border border-gray-300 px-4 py-2 text-center text-gray-500">No items found for this order.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                 <tfoot>
+                    <tr class="font-semibold">
+                        <td colspan="3" class="border border-gray-300 px-4 py-2 text-right">Total Amount:</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">₦{{ invoice.order.total_amount|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- Footer (Will be hidden by no-print class) -->
+        <div class="mt-6 text-center no-print">
+            <p class="text-sm text-gray-500">Thank you for your Patronage!</p>
+        </div>
+        {# --- End of content to be printed --- #}
+
+    </div> {# End of invoice_slip-container #}
+
+</div>
+
+{# --- Updated Print Styles --- #}
+<style>
+    @media print {
+        /* Hide everything in the body by default */
+        body * {
+            visibility: hidden;
+        }
+
+        /* Make the invoice container and its children visible */
+        #invoice_slip-container, #invoice_slip-container * {
+            visibility: visible;
+        }
+
+        /* Position the invoice container at the top-left of the page */
+        #invoice_slip-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%; /* Ensure it takes full width */
+            margin: 0;
+            padding: 15px; /* Add some padding for print */
+            border: none !important; /* Remove border for print */
+            box-shadow: none !important; /* Remove shadow for print */
+            font-size: 10pt; /* Adjust font size if needed */
+        }
+
+        /* Hide elements specifically marked as no-print */
+        .no-print {
+            display: none !important;
+        }
+
+        /* Optional: Ensure table borders are visible */
+        #invoice_slip-container table,
+        #invoice_slip-container th,
+        #invoice_slip-container td {
+            border: 1px solid #ccc !important; /* Use !important to override other styles */
+        }
+
+        /* Optional: Remove background color from table header for print */
+        #invoice_slip-container thead tr {
+            background-color: transparent !important;
+        }
+    }
+</style>
+{% endblock %}

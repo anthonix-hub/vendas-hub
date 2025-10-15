@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Delivery Method</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">  
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-xl font-bold mb-4">Confirm Delete</h1>
+        <p>Are you sure you want to delete the delivery method "{{ delivery_method.delivery_point }}"?</p>
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Yes, Delete
+            </button>
+            <a href="{% url 'page_settings:delivery_methods_list' %}" class="text-blue-500 hover:underline ml-4">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

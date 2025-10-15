@@ -1,0 +1,31 @@
+{% extends "tenant/main.html" %}
+{% block content %}
+
+    <div class='px-12 mt-24'>
+        <h1 class="text-xl mb-6">Payment Options</h1>
+        <div class="px-12  ">
+            <p>Total Amount: {{ total_amount }}</p>
+            <form method="POST">
+                {% csrf_token %}
+                <div class='grid grid-cols-1 items-center '>
+                    <div class="flex gap-6 mt-10 ">
+                        <div class="py-10 px-6 rounded border ">
+                            <label>
+                                <input type="radio" name="payment_method" value="bank" required> Bank Transfer
+                            </label><br>
+                        </div>
+                        <div class="py-10 px-6 rounded border ">
+                            <label>
+                                <input type="radio" name="payment_method" value="paystack" required> Paystack
+                            </label><br>
+                        </div>
+                    <div>
+                    <div class="">
+                        <button type="submit" class="bg-blue-400 text-white px-2 py-2 rounded  " >Proceed</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+<!-- filepath: c:\Users\HP\Desktop\pyprog\webprojects\saasy\tenant\templates\tenant\campaign_create.html -->
+{% extends "tenant/dashboard/dashboard_base.html" %}
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6">Create New Campaign</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+            {{ form.non_field_errors }}
+        </div>
+        <div class="mb-4">
+            <label for="id_title" class="block font-medium">Title</label>
+            {{ form.title }}
+        </div>
+        <div class="mb-4">
+            <label for="id_template_choice" class="block font-medium">Or select a template</label>
+            {{ form.template_choice }}
+            <p class="text-sm text-gray-500">Selecting a template will fill the subject and body fields.</p>
+        </div>
+        <div class="mb-4">
+            <label for="id_subject" class="block font-medium">Subject</label>
+            {{ form.subject }}
+        </div>
+        <div class="mb-4">
+            <label for="id_body" class="block font-medium">Body</label>
+            {{ form.body }}
+            <p class="text-sm text-gray-500">You can use plain text or HTML content.</p>
+        </div>
+        <div class="flex space-x-4">
+            <button type="submit" name="save_campaign" value="1" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Save Campaign
+            </button>
+            <button type="submit" name="send_test" value="1" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Send Test Email
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

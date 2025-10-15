@@ -1,0 +1,422 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SaaS Marketplace</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Add Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Update the font-family */
+        }
+
+        .accent-pink {
+            color: #e880ed;
+        }
+
+        .accent-blue {
+            color: #bde2fc;
+        }
+
+        .btn-primary {
+            background-color: #e880ed;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #cf6fce;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="flex justify-between items-center px-6 py-4 bg-white shadow fixed w-full z-50">
+        <div>
+            <h1 class="text-md md:text-2xl font-bold accent-pink">Vendas<i class="" style="color: #bde2fc;">hub</i></h1>
+        </div>
+        <div class="hidden md:flex space-x-6">
+            <a href="#features" class="text-gray-700 hover:text-blue-500">Features</a>
+            <a href="#pricing" class="text-gray-700 hover:text-blue-500">Pricing</a>
+            <a href="#testimonials" class="text-gray-700 hover:text-blue-500">Testimonials</a>
+            <a href="#contact" class="text-gray-700 hover:text-blue-500">Contact</a>
+        </div>
+        <button 
+            class="md:hidden text-gray-700 focus:outline-none"
+            onclick="toggleMobileMenu()">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden fixed -mt-6 top-0 left-0 w-full h-screen bg-white z-40 flex flex-col items-center space-y-6 pt-24">
+        <button 
+            class="absolute top-4 right-6 text-gray-700 focus:outline-none"
+            onclick="toggleMobileMenu()">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+            <a href="#features" class="text-md px-6 font-bold text-gray-700 hover:text-blue-500 border-b w-full py-4 -mt-6  ">
+                <div class="">
+                    Features
+                </div>
+            </a>
+            <a href="#pricing" class="text-md px-6 font-bold text-gray-700 hover:text-blue-500 border-b w-full py-4 -mt-6  ">
+                <div class="">
+                    Pricing
+                </div>
+            </a>
+            <a href="#testimonials" class="text-md px-6 font-bold text-gray-700 hover:text-blue-500 border-b w-full py-4 -mt-6  ">
+                <div class="">
+                    Testimonials
+                </div>
+            </a>
+            <a href="#contact" class="text-md px-6 font-bold text-gray-700 hover:text-blue-500 border-b w-full py-4 -mt-6  ">
+                <div class="">
+                    Contact
+                </div>
+            </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="h-screen relative flex items-center justify-center text-center subtle-accent">
+        <div class="max-w-4xl mx-auto px-6">
+            <h1 class="text-2xl md:text-5xl font-bold leading-tight ">
+                Empower Your <span class="accent-pink ">Business</span> with <span class="accent-blue">Seamless SaaS</span> Solutions
+            </h1>
+            <p class="mt-6 text-md md:text-lg text-gray-600">
+                Build, manage, and scale your online marketplace with ease. Designed to grow with your ambitions.
+            </p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="#features" class="btn-primary py-3 px-6 font-bold text-md md:text-lg rounded-lg shadow-lg hover:shadow-xl transition">
+                    Explore Features
+                </a>
+                <a href="#signup" class="btn-outline py-3 px-6 font-bold text-md md:text-lg rounded-lg shadow-lg hover:shadow-xl transition border-t ">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="md:py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-8 md:px-24">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-gray-800">Why Choose Us?</h2>
+                <p class="mt-4 text-lg text-gray-600">Everything you need to succeed in one place.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 mt-12">
+                <!-- Feature Card -->
+                <div class="p-8 transition rounded-3xl shadow-inner bg-white  ">
+                    <div class="text-left">
+                        <h1 class="text-xl md:text-4xl font-bold ">
+                            Record Keeping
+                        </h1>
+                        <p class="text-sm md:text-lg mt-4 text-left text-gray-500 ">
+                            Easily manage accounts, track profits and losses, and gain valuable 
+                            insights into your financial health. 
+                            Stay organized, make informed decisions.
+                        </p>
+                    </div>
+                </div>
+                <div class="p-8 py-24 bg-purple-100 border rounded-3xl shadow-lg ">
+                    <div class="text-center">
+                        <i class="fa-solid fa-cogs text-4xl accent-pink"></i>
+                        <h3 class="mt-6 text-xl font-bold text-gray-700">Customizable Tools</h3>
+                        <p class="mt-4 text-gray-500">Adapt our solutions to your business needs effortlessly.</p>
+                    </div>
+                </div>
+                
+                <div class="p-8 py-24 bg-blue-100 border rounded-3xl shadow-lg ">
+                    <div class="text-center">
+                        <i class="fa-solid fa-cogs text-4xl accent-pink"></i>
+                        <h3 class="mt-6 text-xl font-bold text-gray-700">Customizable Tools</h3>
+                        <p class="mt-4 text-gray-500">Adapt our solutions to your business needs effortlessly.</p>
+                    </div>
+                </div>
+                <div class="p-8 transition rounded-3xl shadow-inner bg-white ">
+                    <div class="text-left">
+                        <h1 class="text-xl md:text-4xl font-bold ">
+                            Record Keeping
+                        </h1>
+                        <p class="text-sm md:text-lg mt-4 text-left text-gray-500 ">
+                            Easily manage accounts, track profits and losses, and gain valuable 
+                            insights into your financial health. 
+                            Stay organized, make informed decisions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section><!--Services-->
+        <div class="px-6 my-8 bg-gray-50 ">
+            <div class="grid md:grid-cols-2 gap-6 py-18 items-center">
+                <div class="justify-center flex text-enter mr-12">
+                    <!-- Placeholder for image or graphic -->
+                </div> 
+                <div class="">
+                    <div class="text-center md:text-right py-3 grid grid-cols-1 space-y-2 select-none ">
+                        <div class="space-y-2 mt-2 gap-2 md:flex-col flex-rol ">
+                            <div class="my-1 md:my-0 mx-32 lg:-mx-32 md:mx-32 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-red-100 to-red-400 pr-6 text-white ">
+                                Product Management
+                            </div>
+                            <div class="my-1 md:my-0 mx-24 lg:-mx-24 md:mx-24 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-blue-400 to-blue-100 pr-8">
+                                Inventory Tracking
+                            </div>
+                        </div>
+                        <div class="space-y-2 mt-2 gap-2 md:flex-col flex-rol">
+                                <div class="my-1 md:my-0 mx-20 lg:-mx-20 md:mx-20 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-yellow-100 to-yellow-300 pr-12">
+                                    Order Fulfillment
+                                </div>
+                                <div class="my-1 md:my-0 mx-16 lg:-mx-16 md:mx-16 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-pink-400 to-pink-100 ">
+                                    Customer Analytics
+                                </div>
+                        </div>
+                        <div class="space-y-2 mt-2 gap-2 md:flex-col flex-rol">
+                                <div class="my-1 md:my-0 mx-12 lg:-mx-12 md:mx-12 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-pink-100 to-pink-400 text-black ">
+                                    Marketing Automation
+                                </div>
+                                <div class="my-1 md:my-0 mx-4 lg:-mx-4 md:mx-4 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-gray-200 to-white ">
+                                    Payment Integration
+                                </div>
+                        </div>
+                        <div class="space-y-2 mt-2 gap-2 md:flex-col flex-rol ">
+                            <div class="text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-indigo-100 to-indigo-300 ">
+                                Multi-Channel Selling
+                            </div>
+                                <div class="my-1 md:my-0 mx-4 lg:-mx-4 md:mx-4 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-green-400 to-green-100  ">
+                                    Shipping Management
+                                </div>
+                        </div>
+                        <div class="space-y-2 mt-2 gap-2 md:flex-col flex-rol">
+                                <div class="my-1 md:my-0 mx-12 lg:-mx-12 md:mx-12 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-300 ">
+                                    Loyalty Programs
+                                </div>
+                                <div class="my-1 md:my-0 mx-16 lg:-mx-16 md:mx-16 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-purple-400 to-purple-100 ">
+                                    Mobile-Friendly Design
+                                </div>
+                        </div>
+                        <div class="space-y-2 mt-2 gap-2 md:flex-col flex-rol">
+                                <div class="my-1 md:my-0 mx-20 lg:-mx-20 md:mx-20 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-300 ">
+                                    SEO Optimization
+                                </div>
+                                <div class="my-1 md:my-0 mx-24 lg:-mx-24 md:mx-24 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-purple-400 to-purple-100 ">
+                                    Vendor Management
+                                </div>
+                        </div>
+                        <div class="space-y-2 mt-2 gap-2 md:flex-col flex-rol">
+                                <div class="my-1 md:my-0 mx-32 lg:-mx-32 md:mx-32 text-sm md:text-md rounded transition duration-500 ease-in-out transform hover:shadow-inner hover:-translate-y-1 hover:scale-110 shadow-xl w-4/6 px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-300 ">
+                                    Product Reviews
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Comparison Section -->
+    <section id="comparison" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-gray-800">Why We're Better</h2>
+            <p class="mt-4 text-lg text-gray-600">Compare our features with other platforms.</p>
+            <div class="overflow-x-auto mt-8">
+                <table class="table-auto w-full border-collapse border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2 text-left text-gray-700">Feature</th>
+                            <th class="px-4 py-2 text-left text-gray-700">Our Platform</th>
+                            <th class="px-4 py-2 text-left text-gray-700">Competitor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border px-4 py-2 text-gray-600">Customizable Tools</td>
+                            <td class="border px-4 py-2 text-green-500">✔</td>
+                            <td class="border px-4 py-2 text-red-500">✘</td>
+                        </tr>
+                        <tr>
+                            <td class="border px-4 py-2 text-gray-600">24/7 Support</td>
+                            <td class="border px-4 py-2 text-green-500">✔</td>
+                            <td class="border px-4 py-2 text-red-500">✘</td>
+                        </tr>
+                        <tr>
+                            <td class="border px-4 py-2 text-gray-600">Affordable Pricing</td>
+                            <td class="border px-4 py-2 text-green-500">✔</td>
+                            <td class="border px-4 py-2 text-red-500">✘</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-16 bg-gradient-to-r from-blue-50 to-purple-100">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-gray-800">How It Works</h2>
+            <p class="mt-4 text-lg text-gray-600">Get started in just three simple steps.</p>
+            <div class="grid md:grid-cols-3 gap-12 mt-12">
+                <!-- Step 1 -->
+                <div class="relative bg-white rounded-lg shadow-lg p-8">
+                    <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-purple-500 text-white w-16 h-16 flex items-center justify-center rounded-full shadow-md">
+                        <span class="text-2xl font-bold">1</span>
+                    </div>
+                    <i class="fa-solid fa-user-plus text-5xl text-purple-500"></i>
+                    <h3 class="mt-6 text-xl font-bold text-gray-700">Sign Up</h3>
+                    <p class="mt-4 text-gray-600">Create an account in just a few clicks and start exploring.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="relative bg-white rounded-lg shadow-lg p-8">
+                    <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-16 h-16 flex items-center justify-center rounded-full shadow-md">
+                        <span class="text-2xl font-bold">2</span>
+                    </div>
+                    <i class="fa-solid fa-cogs text-5xl text-blue-500"></i>
+                    <h3 class="mt-6 text-xl font-bold text-gray-700">Customize</h3>
+                    <p class="mt-4 text-gray-600">Tailor the platform to your business needs effortlessly.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="relative bg-white rounded-lg shadow-lg p-8">
+                    <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white w-16 h-16 flex items-center justify-center rounded-full shadow-md">
+                        <span class="text-2xl font-bold">3</span>
+                    </div>
+                    <i class="fa-solid fa-chart-line text-5xl text-green-500"></i>
+                    <h3 class="mt-6 text-xl font-bold text-gray-700">Grow</h3>
+                    <p class="mt-4 text-gray-600">Leverage our tools to scale your business and achieve success.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="py-32 bg-gradient-to-r from-gray-100 to-gray-200">
+        <div class="max-w-7xl mx-auto px-6 text-center  ">
+            <h2 class="text-4xl font-bold text-gray-800">Download Our App</h2>
+            <p class="mt-4 text-lg text-gray-600">Coming soon to your favorite app stores!</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center items-center mt-12 md:mx-48">
+                <!-- Android App Download -->
+                <div class="flex flex-col items-center  ">
+                    <img src="{% static 'img/playstore-download-e1fa9cc6.svg' %}" alt="Download on Google Play" class="h-12 md:h-16 w-auto transition-transform transform hover:scale-105 mx-32 ">
+                    <!-- <p class="mt-2 text-gray-600 text-sm">Available on Android</p> -->
+                </div>
+                <!-- iOS App Download -->
+                <div class="flex flex-col items-center  ">
+                    <img src="{% static 'img/applestore-download-3c9c7d14.svg' %}" alt="Download on the App Store" class="h-12 md:h-16 w-auto transition-transform transform hover:scale-105 mx-32 ">
+                    <!-- <p class="mt-2 text-gray-600 text-sm">Available on iOS</p> -->
+                </div>
+            </div>
+            <p class="mt-8 text-sm md:text-lg text-gray-600 italic">
+                "Download on the App Store Coming Soon"
+            </p>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section id="newsletter" class="py-16 bg-gradient-to-r from-purple-100 to-purple-300">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-gray-800">Stay Updated</h2>
+            <p class="mt-4 text-lg text-gray-600">Subscribe to our newsletter for the latest updates and offers.</p>
+            <form class="mt-6 flex justify-center">
+                <input type="email" placeholder="Enter your email" class="px-4 py-3 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <button type="submit" class="btn-primary px-6 py-3 rounded-r-lg">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-gradient-to-r from-white to-gray-50">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-gray-800">Start Your Journey</h2>
+            <p class="mt-4 text-lg text-gray-600">
+                Don’t wait! Take your business to the next level with our platform.
+            </p>
+            <a href="#signup" class="btn-primary mt-6 inline-block py-4 px-8 font-bold text-lg rounded-lg shadow ">Get Started</a>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-16 bg-white sm:mx-16 md:mx-48 ">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-gray-800 text-center">Frequently Asked Questions</h2>
+            <div class="mt-8 space-y-6">
+                <div class="border-b pb-4">
+                    <h3 class="text-lg font-bold text-gray-700">What is SaaS Marketplace?</h3>
+                    <p class="mt-2 text-gray-600">SaaS Marketplace is a platform that helps businesses manage and scale their operations with ease.</p>
+                </div>
+                <div class="border-b pb-4">
+                    <h3 class="text-lg font-bold text-gray-700">How much does it cost?</h3>
+                    <p class="mt-2 text-gray-600">We offer flexible pricing plans to suit businesses of all sizes. Check out our pricing section for more details.</p>
+                </div>
+                <div class="border-b pb-4">
+                    <h3 class="text-lg font-bold text-gray-700">Is there a free trial?</h3>
+                    <p class="mt-2 text-gray-600">Yes, we offer a 14-day free trial for all new users. No credit card required.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-gray-800 text-center">Contact Us</h2>
+            <p class="mt-4 text-lg text-gray-600 text-center">Have questions? We're here to help.</p>
+            <div class="grid md:grid-cols-2 gap-8 mt-12">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-700">Email</h3>
+                    <p class="mt-2 text-gray-600">support@saasmarketplace.com</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-700">Phone</h3>
+                    <p class="mt-2 text-gray-600">+1 (123) 456-7890</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-gray-800">What Our Users Say</h2>
+                <p class="mt-4 text-lg text-gray-600">Real stories from real users.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+                <div class="p-6 bg-white border rounded-lg shadow-sm ">
+                    <p class="italic text-gray-600">"This platform transformed how we do business."</p>
+                    <div class="mt-4">
+                        <h4 class="text-sm md:text-lg font-bold text-gray-700">- John Doe</h4>
+                        <p class="text-sm text-gray-500">CEO, Tech Solutions</p>
+                    </div>
+                </div>
+                <div class="p-6 bg-white border rounded-lg shadow-sm ">
+                    <p class="italic text-gray-600">"A seamless experience with amazing tools."</p>
+                    <div class="mt-4">
+                        <h4 class="text-sm md:text-lg font-bold text-gray-700">- Jane Smith</h4>
+                        <p class="text-sm text-gray-500">Founder, Creative Co.</p>
+                    </div>
+                </div>
+                <div class="p-6 bg-white border rounded-lg shadow-sm ">
+                    <p class="italic text-gray-600">"Highly recommend for any growing business."</p>
+                    <div class="mt-4">
+                        <h4 class="text-sm md:text-lg font-bold text-gray-700">- Alex Brown</h4>
+                        <p class="text-sm text-gray-500">CTO, Innovate Inc.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; 2025 [Your SaaS Marketplace Name]. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

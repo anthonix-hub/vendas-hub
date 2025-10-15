@@ -1,0 +1,207 @@
+{% extends "tenant/main.html" %}
+{% load multiply_filter %}
+{% load humanize %} 
+{% block content %}
+<div class="container mx-auto mt-6 px-4">
+    <div class="md:px-12 px-6 mt-14">
+        <div class="flex items-center gap-2 justify-center mb-12 md:text-xl text-md ">
+            <div class="flex items-center text-gray-300">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Cart
+            </div>
+            <div class="mt-2">
+                <hr class="md:w-24 w-12  ">
+            </div>
+            <div class="text-gray-900">
+                checkout
+            </div>
+            <div class="mt-2">
+                <hr class="md:w-24 w-12  ">
+            </div>
+            <div class="text-gray-300">
+                payment
+            </div>
+        </div>
+    </div>
+    
+    <h2 class="text-2xl font-bold mb-4 mt-12">
+        Checkout
+    </h2>
+    <div class="grid justify-center">
+        <div class="shadow">
+            <div class="text-xs border px-12 p-4 shadow">
+                {% if waiting_list %}
+                    <h3 class="text-lg font-semibold mb-4 text-green-400 border-b">
+                        -- Items in your Cart --
+                    </h3>
+                    <ul class="list-disc pl-5">
+                        {% for product_id, details in waiting_list.items %}
+                            <li class="mb-3">
+                                <p><strong>Product ID:</strong> {{ product_id }}</p>
+                                <p>
+                                    <strong>Item name:</strong> {{ details.name }}
+                                    <span class="text-yellow-400">X{{ details.quantity }}</span>
+                                </p>
+                                <p><strong>Price (Each):</strong> ₦{{ details.price|intcomma }}</p>
+                                <p>
+                                    <strong>Total Price:</strong>
+                                    ₦{{ details.quantity|multiply:details.price|intcomma }}
+                                </p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <hr class="my-4">
+                    <div class="mt-4 grid justify-end -mr-6">
+                        <p><strong>Total Items:</strong> {{ total_items }}</p>
+                        <p><strong>Total Amount:</strong> ₦{{ total_amount|intcomma }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-red-500">Your cart is empty.</p>
+                {% endif %}
+            </div>
+            {% if email_or_phone %}
+                {% if address_check %}
+                    <div class="flex items-center justify-center ">
+                        <div id="viewAddressBtn" class="text-xs border px-2 py-1 shadow text-gray-500 hover:text-gray-700 hover:shadow-md cursor-pointer">
+                            View address on file
+                        </div>
+                        <div class="">
+                            <!-- Directly show the checkout button -->
+                            <form method="POST" action="{% url 'tenant:checkout' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="email_or_phone" value="{{ email_or_phone }}" />
+                                <div class="flex justify-end mx-4">
+                                    <button
+                                        type="submit"
+                                        class="bg-blue-500 text-white text-xs md:text-md px-2 py-1 rounded shadow hover:bg-blue-600 mt-4 mb-3"
+                                    >
+                                        Checkout
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="px-3 py-1">
+                        <div class="text-xs text-gray-500 ">
+                            No address found on file
+                        </div>
+                        <div class="">
+                            <a href="{% url 'tenant:add_shipping_address' %}" class="">
+                                <div class="shadow px-2 py-1 bg-yellow-100 text-center text-xs text-gray-500 hover:shadow-md hover:text-gray-800">
+                                    Add Shipping Address
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                
+                {% comment %} <form method="POST" action="{% url 'tenant:checkout' %}">
+                    {% csrf_token %}
+                    <label for="email_or_phone" class="block font-semibold mt-4">Email or Phone:</label>
+                    <input
+                        type="text"
+                        name="email_or_phone"
+                        id="email_or_phone"
+                        class="border rounded p-2 w-full mb-4"
+                        placeholder="Enter your email or phone number"
+                    />
+                    <button
+                        type="submit"
+                        class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
+                    >
+                        Confirm Order
+                    </button>
+                    </form> {% endcomment %}
+                    <div class="flex justify-center py-2 ">
+                        <a href="{% url 'tenant:error' %}" class="  ">
+                            <button
+                                type="submit"
+                                class="bg-blue-500 text-white px-2 py-1 text-xs  rounded shadow hover:bg-blue-600"
+                            >
+                                Enter email or Phone Number
+                            </button>
+                        </a>
+                    <div>
+            {% endif %}
+            {% comment %} ************* {% endcomment %}
+
+            {% comment %} {% if address_check %}
+                <div class="grid justify-end">
+                    {% if not email_or_phone %}
+                        <!-- Form to input email or phone -->
+                        
+                    {% else %}
+                        
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="px-3 py-1">
+                    <div class="text-sm text-gray-500 ">
+                        No Address found
+                    </div>
+                    <div class="">
+                        <a href="{% url 'tenant:add_shipping_address' %}" class="">
+                            <div class="shadow px-2 py-1 bg-gray-100 text-center text-xs text-gray-500 hover:shadow-md hover:text-gray-800">
+                                Add Shipping Address
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endif %} {% endcomment %}
+        </div>
+    </div>
+</div>
+
+<!-- Address Modal -->
+<div id="addressModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded shadow-lg w-96" role="dialog" aria-labelledby="addressModalTitle">
+        {% if Shipping_Address %}
+            <h2 id="addressModalTitle" class="text-lg font-semibold mb-4">--- Your Shipping Address ---</h2>
+            <span class="font-bold ">Current Address:</span><br>
+            <div class="text-gray-700 mb-4 text-xs md:text-md border-l space-x-2 space-y-4 ">
+                <span>{{ Shipping_Address.address }}</span><br>
+                <span>{{ Shipping_Address.city }}</span><br>
+                <span>{{ Shipping_Address.state }}</span><br>
+                <span>{{ Shipping_Address.country }}</span><br>
+                <span>{{ Shipping_Address.zipcode }}</span><br>
+            </div>
+            <div class="flex justify-around mt-4 gap-2">
+                <a href="{% url 'tenant:update_shipping_address' %}">
+                    <div class="border rounded px-2 py-1 text-xs hover:shadow-md ">  
+                        Update Address              
+                    </div>
+                </a>
+                <button id="closeAddressModal" class="hover:bg-red-400 bg-red-300 text-white text-xs py-2 px-2 shadow rounded">
+                    Use Address
+                </button>
+            </div>
+        {% else %}
+            <p class="text-red-500">No shipping address found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JavaScript to Toggle Address Modal -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const viewAddressBtn = document.getElementById("viewAddressBtn");
+        const addressModal = document.getElementById("addressModal");
+        const closeAddressModal = document.getElementById("closeAddressModal");
+
+        if (viewAddressBtn) {
+            viewAddressBtn.addEventListener("click", function () {
+                addressModal.classList.remove("hidden");
+            });
+        }
+
+        if (closeAddressModal) {
+            closeAddressModal.addEventListener("click", function () {
+                addressModal.classList.add("hidden");
+            });
+        }
+    });
+</script>
+
+{% endblock %}

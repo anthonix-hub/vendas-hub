@@ -1,0 +1,87 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+<div class="px-24">
+    {% if payment.processed %}
+    <div class="mt-24 ">
+        payment already processed <br>    
+        <a href="{% url 'tenant:dashboard' %}" class="text-yellow-500">access your dashboard</a>
+    </div>
+    {% elif payment.payment_rejected %}
+        <div class="mt-24 ">
+            payment can't be processed or was not made
+        </div>
+    {% else %}
+        <div class="text-lg font-bold mt-12">Confirming Payment...</div>
+        <div class="mt-6 text-center">
+            Please hold while your transaction is being confirmed.
+        </div>
+        <div class="text-lg text-center">
+            This will be done in <span id="countdown_timer">30 mins</span>. Do not refresh the page.
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const countdownDuration = 5 // 45 minutes in seconds
+        const countdownElement = document.getElementById('countdown_timer');
+        const transactionReference = "{{ payment.transaction_reference }}";
+        const dashboardUrl = "{% url 'tenant:dashboard' %}"; // Replace 'dashboard' with your actual dashboard view name
+    
+        // Key for localStorage to track start time
+        const startTimeKey = `payment_start_time_${transactionReference}`;
+        
+        // Initialize or retrieve start time
+        let startTime = localStorage.getItem(startTimeKey);
+        if (!startTime) {
+            startTime = new Date().getTime();
+            localStorage.setItem(startTimeKey, startTime);
+        }
+    
+        // Calculate remaining time
+        const elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000);
+        let timeRemaining = Math.max(countdownDuration - elapsedTime, 0);
+    
+        // Countdown timer
+        const timerInterval = setInterval(function () {
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                countdownElement.innerHTML = "Time expired. Please retry.";
+                localStorage.removeItem(startTimeKey); // Clear stored countdown data
+                return;
+            }
+    
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            countdownElement.innerHTML = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timeRemaining--;
+        }, 1000);
+    
+        // Polling payment status
+        const pollInterval = setInterval(async function () {
+            try {
+                const response = await fetch(`/subscription/check-payment-status/${transactionReference}/`);
+                if (!response.ok) {
+                    console.error(`Error: HTTP status ${response.status}`);
+                    return;
+                }
+        
+                const data = await response.json();
+                console.log('Received Data:', data); // Debugging: Log response data
+        
+                if (data.is_successful) {
+                    clearInterval(timerInterval);
+                    clearInterval(pollInterval);
+                    alert('Payment confirmed! Redirecting...');
+                    localStorage.removeItem(startTimeKey); // Clear stored countdown data
+                    window.location.href = dashboardUrl; // Redirect to the dashboard
+                }
+            } catch (error) {
+                console.error('Error polling payment status:', error); // Log fetch errors
+            }
+        }, 5000); // Poll every 5 seconds
+    });
+</script>

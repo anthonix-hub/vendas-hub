@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="{{ product.name }}">
+    <meta property="og:description" content="{{ product.description }}">
+    <meta property="og:image" content="{{ product.image.url }}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="product">
+    <!--*********************-->
+
+    <script src="{% static 'js/htmx.js' %}" ></script>
+    <script src="{%static 'js/cart.js' %}" ></script>
+    <script src="{% static 'js/htmx.min.js' %}" ></script> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    
+    <title>vendas-hub</title>
+</head>
+<body class="to-bg-{{page_setup.background_color}}-{{page_setup.background_color_shade}} bg-gradient-to-tr from-{{page_setup.background_color}}-{{page_setup.background_color_shade}} text-{{page_setup.text_color}}-{{page_setup.text_color_shade}} " hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' >
+    <header class="">
+        <nav class="text-xs px-6 py-4 flex justify-between bg-{{page_setup.header_footer_color}}-{{page_setup.header_footer_color_shade}} items-center fixed w-full">
+            <a href="{% url 'tenant:store' %}" class="" style="text-decoration: none">
+                vendas-hub
+            </a>
+            <div class="flex space-x-4 items-center">
+                <!-- Add Search Form -->
+                <div class="flex space-x-4 items-center">
+                    <!-- Add Search Form -->
+                    {% comment %} <form method="get" action="{% url 'tenant:search_products' %}" class="relative">
+                        <input type="text" name="q" placeholder="Search products" 
+                               class="border rounded p-1 text-xs" required>
+                        <button type="submit" class="absolute right-0 top-0 mt-1 mr-1 text-gray-600">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form> {% endcomment %}
+                <a href="{% url 'tenant:cart' %}" style="text-decoration: none">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    {% if cartItems %}
+                        <span class="font-bold">{{ cartItems }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'tenant:order_history' %}" style="text-decoration: none">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Order History
+                </a>
+            </div>
+        </nav>
+    </header>    
+    
+    
+    <div class="py-6 {{page_setup.font_type}} ">
+        {% block content %}
+        {% endblock content %}
+    </div>
+    <footer class="{{page_setup.font_type}} bg-{{page_setup.header_footer_color}}-{{page_setup.header_footer_color_shade}} py-4 mt-16 ">
+        <div class="py-24 flex gap-6 justify-center ">
+            <div class="inline-block">
+                <div class="">
+                    Lorem ipsum dolor, 
+                </div>
+                <div class="">
+                    sit amet consectetur adip
+                </div>
+            </div>
+            <div class="inline-block">
+                <div class="">
+                    isicing elit. Consequatur,
+                </div>
+                <div class="">
+                    facere laborum.
+                </div>
+            </div>
+            <div class="inline-block">
+                <div class="">
+                    Accusantium beatae saepe porro,
+                </div>
+                <div class="">
+                    maiores debitis expedita neque?
+                </div>
+            </div>
+        </div>
+        <div class="justify-center flex gap-12  py-3 md:text-md text-xs border-t  ">
+            <span class="">
+                lorem 
+            </span>
+            <span class="">
+                lorm
+            </span>
+            <span class="">
+                lorem
+            </span>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inside the <head> of your base.html -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <!-- {{ form }} -->
+        <div class="px-10 text-gray-400 mt-10 text-md">Create tenant account</div>
+        <div class="mt-16 shadow-md rounded-md pd-24 mx-12 md:mx-72 border ">
+            <div class="mt-6 mb-6">
+                <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm  ">email</label>
+                    <input type="email" name="email" id="email" class="border rounded rounded-md px-2 py-2 ">
+                </div>
+                <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm  ">username</label>
+                    <input type="text" name="username" id="username" class="border rounded rounded-md px-2 py-2 ">
+                </div>
+                <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm  ">first name</label>
+                    <input type="text" name="first_name" id="first_name" class="border rounded rounded-md px-2 py-2 ">
+                </div>
+                <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm  ">last name</label>
+                    <input type="text" name="last_name" id="last_name" class="border rounded rounded-md px-2 py-2 ">
+                </div>
+                {% comment %} <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm  ">blog name</label>
+                    <input type="text" name="blog_name" id="blog_name" class="border rounded rounded-md px-2 py-2 ">
+                </div> {% endcomment %}
+                <!-- <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm -mxbdomain</label>
+                    <input type="text" name="subdomain" id="subdomain" class="border rounded rounded-md px-2 py-2 ">
+                </div> -->
+                <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm  ">password</label>
+                    <input type="password" name="password1" id="password1" class="border rounded rounded-md px-2 py-2 ">
+                </div>
+                <div class="grid mt-1 mb-1 justify-center ">
+                    <label for="" class="text-sm  ">confirm password</label>
+                    <input type="password" name="password2" id="password2" class="border rounded rounded-md px-2 py-2 ">
+                </div>
+            </div>
+            <div class="flex justify-center mb-12 ">
+                <button type="submit" class="bg-blue-400 text-white px-12 py-1 rounded-md hover:bg-blue-500 hover:shadow-md ">
+                    submit
+                </button>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<div class="px-24">
+    <h1 class="text-xl font-bold">Bank Payment</h1>
+    <p class="text-lg">Total Amount: <strong>{{ order.total_amount }}</strong></p>
+    <p>Account Name: <strong>{{ bank_details.account_name }}</strong></p>
+    <p>Account Number: <strong>{{ bank_details.account_number }}</strong></p>
+    <p>Bank Name: <strong>{{ bank_details.bank_name }}</strong></p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="payment_reference">Payment Reference:</label><br>
+        <input type="text" id="payment_reference" name="payment_reference" required class="border p-2 rounded w-full"><br><br>
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">I Have Made Payment</button>
+    </form>
+</div>

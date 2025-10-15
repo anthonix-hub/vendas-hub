@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{%static 'js/htmx.js' %}" ></script>
+    <script src="{%static 'js/htmx.min.js' %}" ></script> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <title>Dashboard</title>
+</head>
+<body class="to-bg-gray-100 bg-gradient-to-tr from-gray-300  " hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' >
+    <header class="">
+        <nav class="text-xs px-6 py-4 flex justify-between bg-gray-600 text-gray-50 items-center fixed w-full">
+            <a href="{% url 'tenant:store' %}" class="text-gray-50" style="text-decoration: none">
+                Dashboard
+            </a>
+            <div>
+                <ul class="flex gap-2 items-center">
+                    {% if user.is_authenticated %}
+                        <div class="border border-blue-400 p-1 text-xs rounded">
+                            <div class="">
+                                {{ user }}
+                            </div>
+                            <div class="">  
+                                <a href="{% url 'tenant:logout' %}" class="hover:bg-red-500 text-white text-xs py px-1 rounded bg-red-400">Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% comment %} <a href="{% url 'tenant:login' %}"> {% endcomment %}
+                            <li class="bg-gray-50 text-gray-800 p-1 rounded">
+                                Login
+                            </li>
+                        {% comment %} </a> {% endcomment %}
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>    
+    <div class="py-6  ">
+        {% block content %}
+            
+        {% endblock content %}
+    </div>
+    <footer class="bg-gray-800 py-4 mt-16 ">
+        <div class="justify-center flex gap-12 text-gray-50 py-3 md:text-md text-xs border-t  ">
+            <span class="">
+                lorem 
+            </span>
+            <span class="">
+                lorm
+            </span>
+            <span class="">
+                lorem
+            </span>
+        </div>
+    </footer>
+</body>
+</html>

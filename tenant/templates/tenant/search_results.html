@@ -1,0 +1,45 @@
+{% extends "tenant/main.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="mt-12 mx-4">
+    <h1 class="text-2xl font-bold mb-4">Search Results</h1>
+    {% if query %}
+        <p class="mb-4">You searched for: <strong>{{ query }}</strong></p>
+        {% if found %}
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for product in products %}
+                    <div class="shadow-lg rounded-lg hover:shadow-2xl bg-white mt-4 py-4 hover:border-blue-500 border-t-2 grid justify-between transition-all duration-300 delay-100">
+                        <div class="-space-y-2">
+                            <div class="view-item md:px-12 cursor-pointer justify-center flex py-2" data-product="{{ product.id }}"
+                                 onclick="trackProductClick({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }})">
+                                <img src="{{ product.image }}" alt="{{ product.name }}" class="object-contain lazyload" data-src="{{ product.image }}">
+                            </div>
+                            <div class="text-sm md:text-lg grid justify-center mt-2 px-4 py-2">
+                                <div>{{ product.name }}</div>
+                                <div class="mt-2 font-bold">₦{{ product.price|floatformat:2|intcomma }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-2 flex space-x-2 text-xs justify-center bg-gray-100 py-3 shadow-inner rounded-b-2xl">
+                            <div class="flex text-xs md:gap-3 gap-1 items-center justify-center">
+                                <button class="view-item border py-2 px-6 text-gray-600 hover:shadow-md hover:bg-yellow-300 rounded-md bg-yellow-50"
+                                        data-product="{{ product.id }}" onclick="trackProductClick({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }})">
+                                    Preview
+                                </button>
+                                <button class="update-cart border py-2 px-6 text-gray-50 bg-{{ page_setup.button_color }}-{{ page_setup.button_color_shade }} hover:shadow-md rounded"
+                                        data-product="{{ product.id }}" data-action="add">
+                                    <i class="fa-solid fa-plus"></i> Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-red-500">No items found in the store matching your search.</p>
+        {% endif %}
+    {% else %}
+        <p>Please enter a search query.</p>
+    {% endif %}
+</div>
+{% endblock %}

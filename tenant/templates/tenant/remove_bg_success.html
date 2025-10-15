@@ -1,0 +1,7 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+
+{% block content %}
+<h1>Image with Removed Background</h1>
+    <img src="{{ output_image_url }}" alt="Processed Image">
+    <a href="/app/upload/">Remove Background for Another Image</a>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "tenant/main.html" %}
+{% block content %}
+<div class="container mx-auto mt-6  ">
+    <h2 class="text-2xl font-bold mb-4 mt-12 px-4 ">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        Your Order history
+    </h2>
+
+    {% if orders %}
+        <table class="table-auto w-full border-collapse border border-gray-300 text-xs md:text-sm px-4 ">
+            <thead>
+                <tr class="shadow">
+                    <th class="border px-4 py-2">Order&nbsp;ID</th>
+                    <th class="border px-4 py-2">Product&nbsp;Name</th>
+                    <th class="border px-4 py-2">ordered&nbsp;date</th>
+                    <th class="border px-4 py-2">Total</th>
+                    <th class="border px-4 py-2">Qty</th>
+                    <th class="border px-4 py-2">shipped</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td class="text-center">{{ order.id }}</td>
+                        <td class="text-center">{{ item.product.name }}</td>
+                        <td class="border text-center px-4 py-2">{{ order.ordered_date|date:"d-m-Y H:i" }}</td>
+                        <td class="border text-center px-4 py-2">₦{{ item.get_total }}</td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                        {% if order.shipped == True %}
+                            <td class="text-center">🚀</td>
+                            {% else %}
+                            <td class="text-center">🌡</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No orders found.</p>
+    {% endif %}
+</div>
+{% endblock %}

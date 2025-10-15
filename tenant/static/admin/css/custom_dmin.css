@@ -1,0 +1,16 @@
+/********** Change Background Color **********/
+#header {
+    background: #1E3A8A !important;  /* Change this to your preferred color */
+}
+
+/********** Change Text Color **********/
+#header a {
+    color: white !important;
+}
+
+/********** Change Logo **********/
+#header .logo {
+    content: url('/static/admin/img/custom-logo.png'); /* Replace with your logo */
+    height: 40px;
+    width: auto;
+}

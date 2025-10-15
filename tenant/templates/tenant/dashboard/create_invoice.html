@@ -1,0 +1,42 @@
+{% extends "tenant/dashboard/dashboard_base.html" %}
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800 mt-12 ">Create Manual Invoice</h1>
+    <form method="post" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6 border border-gray-200">
+        {% csrf_token %}
+        <div class="space-y-6">
+            <div>
+                <label for="id_order" class="block text-gray-700 font-medium mb-2">Order</label>
+                {{ form.order }}
+                <p class="text-sm text-gray-500 mt-1">Select the order for this invoice.</p>
+            </div>
+            <div>
+                <label for="id_invoice_number" class="block text-gray-700 font-medium mb-2">Invoice Number</label>
+                {{ form.invoice_number }}
+                <p class="text-sm text-gray-500 mt-1">Enter a unique invoice number.</p>
+            </div>
+            <div>
+                <label for="id_due_date" class="block text-gray-700 font-medium mb-2">Due Date</label>
+                {{ form.due_date }}
+                <p class="text-sm text-gray-500 mt-1">Specify the due date for payment.</p>
+            </div>
+            <div>
+                <label for="id_total_amount" class="block text-gray-700 font-medium mb-2">Total Amount</label>
+                {{ form.total_amount }}
+                <p class="text-sm text-gray-500 mt-1">Enter the total amount for the invoice.</p>
+            </div>
+            <div>
+                <label for="id_is_paid" class="block text-gray-700 font-medium mb-2">Is Paid</label>
+                {{ form.is_paid }}
+                <p class="text-sm text-gray-500 mt-1">Mark the invoice as paid if applicable.</p>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-between items-center">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Create Invoice
+            </button>
+            <a href="{% url 'tenant:invoice_list' %}" class="text-blue-500 hover:underline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

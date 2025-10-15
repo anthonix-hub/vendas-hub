@@ -1,0 +1,191 @@
+{% extends "tenant/main.html" %}
+{% load multiply_filter %}
+{% load static %}
+{% load humanize %}  <!-- Load Django humanize for intcomma -->
+{% block content %}
+{% comment %} <script src="{% static 'js/cart.js' %}"></script> {% endcomment %}
+<div class="md:px-12 px-6 mt-14">
+    <div class="flex items-center gap-2 justify-center mb-12 md:text-xl text-md ">
+        <div class="flex items-center">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Cart
+        </div>
+        <div class="">
+            <hr class="md:w-24 w-12  ">
+        </div>
+        <div class="text-gray-300">
+            checkout
+        </div>
+        <div class="">
+            <hr class="md:w-24 w-12  ">
+        </div>
+        <div class="text-gray-300">
+            payment
+        </div>
+    </div>
+</div>
+<div id="message-box" style="display: none;"></div>
+
+<div class="border shadow-md py-4 md:px-8 px-2 bg-white hidden md:block mx-4 xl:mx-80 lg:mx-48 md:mx-24 sm:mx-8">
+    <div class="-mt-4 py-4">
+        <a href="{% url 'tenant:store' %}">
+            <span class="border-2 border-gray-300 p-1 shadow cursor-pointer hover:shadow-md md:text-sm text-xs rounded">
+            &lt;&lt; Continue Shopping
+            </span>
+        </a>
+    </div>
+    <hr>
+    <div class="flex justify-between items-center  ">
+        <div class="flex md:gap-48 items-center gap-12 justify-between py-3 text-xs md:text-sm font-bold">
+            <span>Items: {{ total_quantity }}</span>
+            <span>Total amount: ₦{{ total_amount|floatformat:2|intcomma }}</span>
+        </div>
+        <div class="">
+            {% if cart.total_items == 0 %}
+                <p>No items in cart</p>
+            {% else %}
+                <a href="{% url 'tenant:checkout' %}">
+                    <button class="bg-green-500 p-1 shadow-sm rounded text-xs md:text-sm text-gray-50 hover:bg-green-600 hover:shadow-md">
+                        Checkout
+                    </button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="border shadow-md mt-16 bg-white overflow-x-auto mx-4 xl:mx-80 lg:mx-48 md:mx-24 sm:mx-8">
+    <div>
+        <div class="block px-2">
+            {% comment %} {% for item in cart.values %} {% endcomment %}
+            {% for item_id, item in cart.items %}
+            <!-- Remove Button -->
+            <div class="flex justify-end">
+                <button class="update-cart bg-red-500 text-white px-4 py-1 text-xs rounded-b shadow hover:bg-red-600" data-product="{{ item.id }}" data-action="clear_out">
+                    Remove item
+                </button>
+            </div>
+                <div class="grid grid-cols-2 items-center gap-4 md:gap-8 border-b py-2 px-4">
+                    <!-- Product Image -->
+                     <div class="md:grid-cols-2 gap-6 grid grid-cols-1 justify-center items-center ">
+                         <div class="flex-shrink-0">
+                            <img src="{{ item.image_url }}" alt="{{ item.name }}" class="object-contain md:h-48 h-36 ">
+                         </div>
+                         <div class="text-left md:text-left ">
+                            <h4 class="font-bold text-xs   ">{{ item.name }}</h4>
+                            <p class="text-gray-600 text-sm md:text-base mt-2">Price: ₦{{ item.price|floatformat:2|intcomma }}</p>
+                            <p class="">
+                                Subtotal: 
+                                {% comment %} {{ item.quantity|floatformat:2|add:item.price|floatformat:2 }} {% endcomment %}
+                                ₦{{ item.quantity|multiply:item.price|intcomma }}
+                            </p>
+                         </div>
+                     </div>
+                    <!-- Product Details -->
+                    <div class="md:flex-row grid-cols-1 justify-center items-center gap-4">
+                        <!-- Quantity Controls -->
+                        <div class="flex items-center gap-2">
+                            <button class="update-cart bg-gray-300 px-2 py-1 rounded shadow hover:bg-gray-400 text-xs " data-product="{{ item.id }}" data-action="remove">-</button>
+                            <span class="border px-4 py-1 text-xs ">{{ item.quantity }}</span>
+                            <button class="update-cart bg-gray-300 px-2 py-1 rounded shadow hover:bg-gray-400 text-xs" data-product="{{ item.id }}" data-action="add">+</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="border shadow-md py-4 md:px-8 px-2 bg-white md:hidden block mt-12 mx-4 xl:mx-80 lg:mx-48 md:mx-24 sm:mx-8">
+    <div class="-mt-4 py-4">
+        <a href="{% url 'tenant:store' %}">
+            <span class="border-2 border-gray-300 p-1 shadow cursor-pointer hover:shadow-md md:text-sm text-xs rounded">
+            &lt;&lt; Continue Shopping
+            </span>
+        </a>
+    </div>
+    <hr>
+    <div class="flex justify-between items-center  ">
+        <div class="flex md:gap-48 items-center gap-12 justify-between py-3 text-xs md:text-sm font-bold">
+            <span>Items: {{ total_quantity }}</span>
+            <span>Total amount: ₦{{ total_amount|floatformat:2|intcomma }}</span>
+        </div>
+        <div class="">
+            {% if cart.total_items == 0 %}
+                <p>No items in cart</p>
+            {% else %}
+                <a href="{% url 'tenant:checkout' %}">
+                    <button class="bg-green-500 p-1 shadow-sm rounded text-xs md:text-sm text-gray-50 hover:bg-green-600 hover:shadow-md">
+                        Checkout
+                    </button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select all update-cart buttons
+        const updateCartButtons = document.querySelectorAll(".update-cart");
+    
+        // Add click event listeners to each button
+        updateCartButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const productId = this.dataset.product; // Product ID from data attribute
+                const action = this.dataset.action; // Action (add, remove, clear_out)
+    
+                // Debugging
+                console.log(`Action triggered: ${action}, Product ID: ${productId}`);
+    
+                // Send POST request to update the cart
+                fetch("add_to_cart/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken"), // Include CSRF token
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        action: action,
+                    }),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Refresh the page after a successful cart update
+                            window.location.reload();
+                        } else {
+                            console.error("Error updating cart:", data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error updating cart:", error);
+                    });
+            });
+        });
+    
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(`${name}=`)) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+    
+</script>
+
+{% endblock content %}
